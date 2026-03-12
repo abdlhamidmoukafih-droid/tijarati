@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="ar-MA" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>تجارتي</title>
+<meta name="theme-color" content="#0c1520"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="تجارتي"/>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0c1520;--sur:#131f2e;--card:#1a2840;--bdr:#1f3050;
+  --g:#0cba7e;--gd:rgba(12,186,126,0.12);
+  --o:#f07030;--od:rgba(240,112,48,0.12);
+  --b:#3a8fef;--bd:rgba(58,143,239,0.12);
+  --r:#e74c3c;--rd:rgba(231,76,60,0.12);
+  --gold:#f5c842;--goldd:rgba(245,200,66,0.13);
+  --txt:#deeaf8;--mut:#4a6a8a;--w:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);direction:rtl;display:flex;flex-direction:column;height:100vh;}
+
+/* ---- SCREENS ---- */
+.page{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg);}
+.page.active{display:flex;}
+
+/* ---- LOGIN ---- */
+#pg-login{align-items:center;justify-content:center;gap:14px;padding:28px;}
+.ll{font-family:'Tajawal',sans-serif;font-size:44px;font-weight:800;color:var(--w);text-align:center;}
+.ll span{color:var(--g);}
+.ls{font-size:13px;color:var(--mut);text-align:center;}
+.linp{width:100%;max-width:320px;background:var(--card);border:2px solid var(--bdr);border-radius:14px;padding:15px 18px;color:var(--w);font-family:'Cairo',sans-serif;font-size:18px;font-weight:700;text-align:center;direction:rtl;}
+.linp:focus{outline:none;border-color:var(--g);}
+.lbtn{width:100%;max-width:320px;background:var(--g);color:#041a0e;border:none;border-radius:14px;padding:15px;font-family:'Cairo',sans-serif;font-size:16px;font-weight:800;cursor:pointer;}
+.lbtn:active{transform:scale(0.97);}
+
+/* ---- TOPBAR ---- */
+.topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.tlogo{font-family:'Tajawal',sans-serif;font-size:17px;font-weight:800;color:var(--w);}
+.tlogo span{color:var(--g);}
+.tchip{background:var(--gd);color:var(--g);border:1px solid rgba(12,186,126,0.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;}
+.tibtn{background:none;border:none;color:var(--mut);font-size:16px;cursor:pointer;}
+
+/* ---- CONTENT ---- */
+.content{flex:1;overflow-y:auto;padding:12px;padding-bottom:20px;}
+
+/* ---- STATS BAR ---- */
+.sb{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px;}
+.sbc{background:var(--card);border:1px solid var(--bdr);border-radius:11px;padding:9px 6px;text-align:center;}
+.sbci{font-size:15px;margin-bottom:2px;}
+.sbcv{font-family:'Tajawal',sans-serif;font-size:17px;font-weight:800;line-height:1;}
+.sbcl{font-size:9px;color:var(--mut);margin-top:1px;}
+
+/* ---- SEC ---- */
+.sec{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:13px;margin-bottom:11px;}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.sec-hd.nb{cursor:default;}
+.sec-ttl{font-size:14px;font-weight:800;color:var(--w);display:flex;align-items:center;gap:6px;}
+.sec-tog{color:var(--mut);font-size:13px;transition:transform 0.2s;}
+.sec-tog.open{transform:rotate(180deg);}
+.sec-bd{overflow:hidden;transition:max-height 0.3s ease;margin-top:12px;}
+.sec-bd.col{max-height:0!important;margin-top:0;}
+
+/* ---- FORM ---- */
+.field{margin-bottom:8px;}
+.field label{font-size:10px;color:var(--mut);font-weight:700;display:block;margin-bottom:3px;}
+.fi{width:100%;background:var(--sur);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;color:var(--txt);font-family:'Cairo',sans-serif;font-size:13px;direction:rtl;}
+.fi:focus{outline:none;border-color:var(--g);}
+.fs{width:100%;background:var(--sur);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;color:var(--txt);font-family:'Cairo',sans-serif;font-size:13px;direction:rtl;}
+.fs option{background:var(--card);}
+
+/* ---- ROW GRID ---- */
+.rlbls{display:grid;grid-template-columns:1fr 68px 68px 30px;gap:5px;margin-bottom:3px;}
+.rlbl{font-size:9px;font-weight:700;color:var(--mut);text-align:center;}
+.rlbl:first-child{text-align:right;padding-right:2px;}
+.irow{display:grid;grid-template-columns:1fr 68px 68px 30px;gap:5px;margin-bottom:5px;align-items:center;}
+.irow .fi{padding:8px 7px;font-size:12px;}
+.xbtn{background:var(--rd);color:var(--r);border:none;border-radius:7px;width:30px;height:34px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;}
+
+/* ---- TOTAL BOX ---- */
+.tbox{background:var(--sur);border:1px solid var(--bdr);border-radius:9px;padding:9px 13px;margin:7px 0;display:none;}
+.tr2{display:flex;justify-content:space-between;align-items:center;padding:2px 0;}
+.trl{font-size:11px;color:var(--mut);}
+.trv{font-family:'Tajawal',sans-serif;font-size:15px;font-weight:800;}
+.tdiv{height:1px;background:var(--bdr);margin:5px 0;}
+
+/* ---- FATORA ---- */
+.fatora{background:var(--sur);border:1px solid rgba(12,186,126,0.3);border-radius:12px;padding:14px;margin:10px 0;}
+.fhd{text-align:center;border-bottom:1px solid var(--bdr);padding-bottom:10px;margin-bottom:10px;}
+.ftitle{font-family:'Tajawal',sans-serif;font-size:20px;font-weight:800;color:var(--w);}
+.fsub{font-size:10px;color:var(--mut);margin-top:3px;}
+.ftbl{width:100%;border-collapse:collapse;font-size:11px;}
+.ftbl th{color:var(--mut);font-size:10px;padding:4px 5px;border-bottom:1px solid var(--bdr);text-align:right;font-weight:700;}
+.ftbl td{padding:6px 5px;border-bottom:1px solid var(--bdr);color:var(--txt);}
+.ftbl tr:last-child td{border-bottom:none;}
+.ftot{display:flex;justify-content:space-between;align-items:center;padding-top:9px;border-top:1px solid var(--bdr);margin-top:6px;}
+.ftotl{font-size:12px;color:var(--mut);}
+.ftotv{font-family:'Tajawal',sans-serif;font-size:22px;font-weight:800;color:var(--g);}
+.ftype{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;}
+
+/* ---- BTN ---- */
+.btn{width:100%;border:none;border-radius:9px;padding:11px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-top:5px;}
+.btn:active{transform:scale(0.97);}
+.bg{background:var(--g);color:#041a0e;}
+.br{background:var(--r);color:#fff;}
+.bb{background:var(--b);color:#fff;}
+.badd{width:100%;background:var(--gd);color:var(--g);border:1px dashed var(--g);border-radius:8px;padding:8px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:7px;}
+
+/* ---- LIST ---- */
+.li{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-bottom:1px solid var(--bdr);}
+.li:last-child{border-bottom:none;}
+.lico{width:33px;height:33px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.lin{flex:1;min-width:0;}
+.lnm{font-size:12px;font-weight:700;color:var(--w);}
+.lsb{font-size:10px;color:var(--mut);margin-top:1px;line-height:1.5;}
+.lr{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.lamt{font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;}
+.delbtn{background:var(--rd);color:var(--r);border:none;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer;}
+.bdg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700;}
+.bgg{background:var(--gd);color:var(--g);}
+.bgo{background:var(--od);color:var(--o);}
+.bgb{background:var(--bd);color:var(--b);}
+.bgr{background:var(--rd);color:var(--r);}
+.bggold{background:var(--goldd);color:var(--gold);}
+
+/* ---- EMPTY ---- */
+.empty{text-align:center;padding:18px;color:var(--mut);font-size:11px;}
+.ei{font-size:26px;margin-bottom:5px;}
+
+/* ---- STOCK BAR ---- */
+.stbw{height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;margin-top:4px;}
+.stb{height:100%;border-radius:3px;}
+
+/* ---- TOAST ---- */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--g);color:#041a0e;padding:8px 18px;border-radius:18px;font-size:12px;font-weight:700;opacity:0;transition:all 0.22s;z-index:9999;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ---- CLIENT PAGE ---- */
+#pg-client{background:var(--bg);}
+.cl-hero{background:var(--sur);border-bottom:1px solid var(--bdr);padding:16px 14px 14px;text-align:center;}
+.cl-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin:0 auto 8px;}
+.cl-name{font-family:'Tajawal',sans-serif;font-size:22px;font-weight:800;color:var(--w);}
+.cl-phone{font-size:11px;color:var(--mut);margin-top:2px;}
+.points-box{background:var(--goldd);border:1px solid rgba(245,200,66,0.3);border-radius:12px;padding:12px 16px;margin:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+.pts-num{font-family:'Tajawal',sans-serif;font-size:36px;font-weight:800;color:var(--gold);}
+.pts-label{font-size:11px;color:var(--mut);}
+.pts-stars{font-size:20px;letter-spacing:2px;}
+.cl-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 14px 10px;}
+.cl-stat{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px;text-align:center;}
+.cl-stat-v{font-family:'Tajawal',sans-serif;font-size:18px;font-weight:800;}
+.cl-stat-l{font-size:9px;color:var(--mut);margin-top:2px;}
+.cl-history{padding:0 14px 14px;}
+.cl-hist-title{font-size:11px;font-weight:700;color:var(--mut);margin-bottom:8px;}
+.back-btn{background:none;border:none;color:var(--g);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;}
+
+
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="page active" id="pg-login">
+  <div class="ll">تجارتي <span>•</span></div>
+  <div class="ls">دخل اسم التجارة ديالك 👇</div>
+  <input class="linp" id="login-name" type="text" placeholder="اسمك / اسم التجارة" maxlength="30"/>
+  <button class="lbtn" onclick="doLogin()">ابدا الآن ←</button>
+  <div style="font-size:11px;color:var(--mut)">🔒 بياناتك محفوظة في هاتفك فقط</div>
+</div>
+
+<!-- ===== CODE PAGE ===== -->
+<div class="page" id="pg-code">
+  <div class="ll">تجارتي <span>•</span></div>
+  <div class="ls" style="margin-bottom:6px;">👋 مرحباً <span id="code-merchant-name" style="color:var(--g);font-weight:800;"></span></div>
+  <div class="ls" style="font-size:12px;color:var(--mut);margin-bottom:18px;">دخل كود الترخيص ديالك باش تبدا</div>
+  <input class="linp" id="license-input" type="text" placeholder="مثال: TIJ-XXXX-XXXX" maxlength="20" style="letter-spacing:2px;text-align:center;text-transform:uppercase;font-size:16px;"/>
+  <button class="lbtn" onclick="checkLicense()">✓ تحقق من الكود ←</button>
+  <div id="code-error" style="font-size:12px;color:var(--r);margin-top:8px;min-height:18px;"></div>
+  <div style="margin-top:20px;padding:12px;background:var(--sur);border-radius:10px;border:1px solid var(--bdr);text-align:center;">
+    <div style="font-size:11px;color:var(--mut);margin-bottom:6px;">بغيتي تشوف التطبيق قبل؟ 👇</div>
+    <button class="btn" style="background:transparent;border:1px solid var(--bdr);color:var(--mut);font-size:12px;padding:8px 16px;" onclick="demoMode()">👁️ شوف التطبيق</button>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="page" id="pg-main">
+  <!-- شارة وضع العرض -->
+  <div id="demo-banner" style="display:none;background:var(--o);color:#fff;text-align:center;padding:6px;font-size:11px;font-weight:800;cursor:pointer;" onclick="document.getElementById('demo-modal').style.display='flex'">
+    👁️ وضع العرض — اضغط هنا باش تفعل التطبيق 🔑
+  </div>
+
+  <!-- Modal الاشتراك -->
+  <div id="sub-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:24px;width:100%;max-width:340px;">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:24px;">🔐</div>
+        <div style="font-size:16px;font-weight:900;color:var(--w);">اختار اشتراكك</div>
+        <div style="font-size:11px;color:var(--mut);margin-top:4px;">بياناتك محفوظة — تجارتك في أمان</div>
+      </div>
+
+      <!-- شهري -->
+      <div onclick="selectSub('monthly')" id="sub-monthly" style="border:2px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--w);">📅 شهري</div>
+            <div style="font-size:11px;color:var(--mut);">كل شهر</div>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-size:20px;font-weight:900;color:var(--g);">35 <span style="font-size:12px;">درهم</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- سنوي -->
+      <div onclick="selectSub('yearly')" id="sub-yearly" style="border:2px solid var(--g);border-radius:12px;padding:14px;margin-bottom:16px;cursor:pointer;background:rgba(12,186,126,0.08);position:relative;">
+        <div style="position:absolute;top:-10px;right:12px;background:var(--g);color:#041a0e;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;">⭐ الأحسن</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--w);">🗓️ سنوي</div>
+            <div style="font-size:11px;color:var(--g);">توفير 121 درهم 🎉</div>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-size:20px;font-weight:900;color:var(--g);">299 <span style="font-size:12px;">درهم</span></div>
+            <div style="font-size:10px;color:var(--mut);text-decoration:line-through;">420 درهم</div>
+          </div>
+        </div>
+      </div>
+
+      <button id="sub-confirm-btn" class="btn bg" style="font-size:14px;padding:12px;" onclick="confirmSub()">💬 اشترك عبر WhatsApp</button>
+      <button class="btn" style="background:transparent;border:1px solid var(--bdr);color:var(--mut);font-size:12px;margin-top:6px;" onclick="document.getElementById('sub-modal').style.display='none'">متأخر — رجوع</button>
+    </div>
+  </div> style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:24px;width:100%;max-width:320px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:8px;">🔑</div>
+      <div style="font-size:15px;font-weight:800;color:var(--w);margin-bottom:6px;">خاصك الكود باش تحفظ</div>
+      <div style="font-size:12px;color:var(--mut);margin-bottom:16px;">تواصل مع المورد باش تحصل على كود الترخيص</div>
+      <input class="fi" id="modal-code-input" type="text" placeholder="TIJ-XXXX-XXXX" style="text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;"/>
+      <button class="btn bg" style="margin-bottom:8px;" onclick="checkLicenseModal()">✓ تحقق من الكود</button>
+      <button class="btn" style="background:transparent;border:1px solid var(--bdr);color:var(--mut);font-size:12px;" onclick="document.getElementById('demo-modal').style.display='none'">متأخر — رجوع</button>
+      <div id="modal-err" style="font-size:12px;color:var(--r);margin-top:8px;min-height:16px;"></div>
+    </div>
+  </div>
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="tlogo">تجارتي <span>•</span></div>
+      <div class="tchip" id="tb-name"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="font-size:10px;color:var(--mut)" id="tb-date"></div>
+      <button class="tibtn" onclick="exportData()" title="تصدير البيانات">📤</button>
+      <label class="tibtn" title="استيراد البيانات" style="cursor:pointer;">📥<input type="file" accept=".json" style="display:none" onchange="importData(event)"/></label>
+      <button class="tibtn" onclick="showPage('pg-settings');loadSettings()">⚙️</button>
+      <button id="pwa-btn" onclick="installPWA()" style="display:none;align-items:center;gap:4px;background:var(--g);color:#041a0e;border:none;border-radius:7px;padding:5px 9px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:800;cursor:pointer;">📲 نزل</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="sb">
+      <div class="sbc"><div class="sbci">💰</div><div class="sbcv" id="st-day" style="color:var(--g)">0</div><div class="sbcl">اليوم</div></div>
+      <div class="sbc"><div class="sbci">📉</div><div class="sbcv" id="st-exp" style="color:var(--r)">0</div><div class="sbcl">مصاريف</div></div>
+      <div class="sbc"><div class="sbci">⏳</div><div class="sbcv" id="st-debt" style="color:var(--o)">0</div><div class="sbcl">ديون</div></div>
+      <div class="sbc"><div class="sbci">💎</div><div class="sbcv" id="st-profit" style="color:var(--b)">0</div><div class="sbcl">ربح</div></div>
+    </div>
+
+    <!-- 1. FATORA -->
+    <div class="sec">
+      <div class="sec-hd nb">
+        <div class="sec-ttl">🧾 الفاتورة</div>
+      </div>
+      <div class="sec-bd" style="max-height:4000px;">
+
+        <!-- STEP 1: CLIENT -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div class="field" style="margin:0">
+            <label>👤 العميل</label>
+            <input class="fi" id="v-client" type="text" placeholder="اسم العميل" list="clients-datalist" oninput="calcTot()"/>
+            <datalist id="clients-datalist"></datalist>
+          </div>
+          <div class="field" style="margin:0">
+            <label>📅 التاريخ</label>
+            <input class="fi" id="v-date" type="date"/>
+          </div>
+        </div>
+        <datalist id="fatora-stock-list"></datalist>
+
+        <!-- STEP 2: ITEMS -->
+        <!-- column labels -->
+        <div style="display:grid;grid-template-columns:1fr 58px 44px 58px 58px 28px;gap:4px;margin-bottom:3px;padding:0 2px;">
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">البضاعة</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mut);text-align:center">الوحدة</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mut);text-align:center">العدد</span>
+          <span style="font-size:9px;font-weight:700;color:var(--o);text-align:center">💸 دفع</span>
+          <span style="font-size:9px;font-weight:700;color:var(--g);text-align:center">💰 بيع</span>
+          <span></span>
+        </div>
+        <div id="rows-container"></div>
+        <button class="badd" onclick="addRow()">➕ زيد بضاعة أخرى</button>
+
+        <!-- TOTAL -->
+        <div class="tbox" id="tbox"></div>
+
+        <!-- PAYMENT TYPE -->
+        <div class="field" style="margin-bottom:8px;">
+          <label>نوع الدفع</label>
+          <select class="fs" id="v-type">
+            <option value="كاش">💵 كاش</option>
+            <option value="نسية">📝 نسية</option>
+            <option value="بطاقة">💳 بطاقة</option>
+            <option value="تحويل">📱 تحويل</option>
+          </select>
+        </div>
+
+        <button class="btn bg" onclick="saveSale()">✓ حفظ الفاتورة</button>
+
+        <!-- FATORA DISPLAY -->
+        <div id="fatora-box" style="display:none;margin-top:10px;">
+          <div class="fatora">
+            <div class="fhd">
+              <div class="ftitle" id="f-merchant"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                <div class="fsub" id="f-client"></div>
+                <div class="fsub" id="f-date-disp"></div>
+              </div>
+            </div>
+            <table class="ftbl">
+              <thead>
+                <tr>
+                  <th>البضاعة</th>
+                  <th style="text-align:center">العدد</th>
+                  <th style="color:var(--o);text-align:center">💸/وحدة</th>
+                  <th style="color:var(--g);text-align:center">💰/وحدة</th>
+                  <th style="color:var(--b);text-align:center">المجموع</th>
+                </tr>
+              </thead>
+              <tbody id="f-body"></tbody>
+            </table>
+            <div class="ftot">
+              <div>
+                <div class="ftotl">الإجمالي</div>
+                <div id="f-type-badge" style="margin-top:3px;"></div>
+              </div>
+              <div>
+                <div class="ftotv" id="f-total"></div>
+                <div style="font-size:10px;color:var(--mut);text-align:left">كسب: <span style="color:var(--b)" id="f-profit"></span> د</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn bb" style="margin-top:6px;" onclick="closeFatora()">✕ إغلاق الفاتورة</button>
+          <!-- جملة تسويقية -->
+          <div onclick="showSubModal()" style="margin-top:10px;background:linear-gradient(135deg,#0cba7e22,#3a8fef22);border:1px solid var(--g);border-radius:10px;padding:10px 12px;text-align:center;cursor:pointer;">
+            <div style="font-size:12px;font-weight:800;color:var(--g);">🔐 اشترك دابا وحفظ بياناتك للأبد</div>
+            <div style="font-size:11px;color:var(--mut);margin-top:2px;">تجارتك في أمان — من 35 درهم/شهر 💪</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
+            <button class="btn" style="background:#25D366;color:#fff;padding:10px;font-size:13px;" onclick="payWhatsApp()">💬 واتساب</button>
+            <button class="btn" style="background:var(--b);color:#fff;padding:10px;font-size:13px;" onclick="payLink()">💳 رابط دفع</button>
+          </div>
+        </div>
+
+        <!-- SALES LIST -->
+        <div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:10px;">
+          <div style="font-size:11px;color:var(--mut);font-weight:700;margin-bottom:8px;">📋 سجل البيعات</div>
+          <div id="sales-list"><div class="empty"><div class="ei">🛒</div>لا توجد بيعات بعد</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MADKHOL -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('madkhol')">
+        <div class="sec-ttl">📈 المدخول</div>
+        <span class="sec-tog" id="tog-madkhol">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-madkhol" style="max-height:0">
+        <div style="display:grid;grid-template-columns:1fr 85px;gap:7px;align-items:flex-end;">
+          <div class="field" style="margin:0"><label>المصدر</label><input class="fi" id="in-desc" type="text" placeholder="إيجار، جملة..."/></div>
+          <div class="field" style="margin:0"><label>المبلغ</label><input class="fi" id="in-amount" type="number" placeholder="0" inputmode="decimal"/></div>
+        </div>
+        <button class="btn bg" style="font-size:13px;padding:10px;" onclick="addIncome()">✓ حفظ المدخول</button>
+        <div id="income-list" style="margin-top:10px;"><div class="empty" style="padding:10px"><div class="ei" style="font-size:22px">📈</div>لا توجد مدخولات</div></div>
+      </div>
+    </div>
+
+    <!-- 3. MASSRIF -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('massrif')">
+        <div class="sec-ttl">📉 المصاريف</div>
+        <span class="sec-tog" id="tog-massrif">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-massrif" style="max-height:0">
+        <div style="display:grid;grid-template-columns:1fr 85px;gap:7px;align-items:flex-end;">
+          <div class="field" style="margin:0"><label>الوصف</label><input class="fi" id="ex-desc" type="text" placeholder="كراء، تموين..."/></div>
+          <div class="field" style="margin:0"><label>المبلغ</label><input class="fi" id="ex-amount" type="number" placeholder="0" inputmode="decimal"/></div>
+        </div>
+        <button class="btn br" style="font-size:13px;padding:10px;" onclick="addExpense()">✓ حفظ المصروف</button>
+        <div id="expense-list" style="margin-top:10px;"><div class="empty" style="padding:10px"><div class="ei" style="font-size:22px">💸</div>لا توجد مصاريف</div></div>
+      </div>
+    </div>
+
+    <!-- 4. MAKHZON -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('stock')">
+        <div class="sec-ttl">📦 المخزون</div>
+        <span class="sec-tog" id="tog-stock">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-stock" style="max-height:0">
+        <div style="display:grid;grid-template-columns:1fr 70px 70px;gap:7px;align-items:flex-end;margin-bottom:8px;">
+          <div class="field" style="margin:0"><label>المنتج</label><input class="fi" id="st-name" type="text" placeholder="سكر..." list="stock-datalist"/><datalist id="stock-datalist"></datalist></div>
+          <div class="field" style="margin:0"><label>الكمية</label><input class="fi" id="st-qty" type="number" placeholder="0" inputmode="decimal"/></div>
+          <div class="field" style="margin:0"><label>الوحدة</label>
+            <select class="fs" id="st-unit" style="padding:9px 5px;font-size:11px;">
+              <option>كغ</option><option>غ</option><option>لتر</option><option>مل</option><option>علبة</option><option>كارطونة</option><option>قطعة</option><option>طن</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>⚠️ حد التنبيه</label><input class="fi" id="st-min" type="number" placeholder="10" inputmode="decimal"/></div>
+        <button class="btn bg" style="font-size:13px;padding:10px;" onclick="addStock()">✓ إضافة للمخزون</button>
+        <div id="stock-list" style="margin-top:10px;"><div class="empty"><div class="ei">📦</div>المخزون فارغ</div></div>
+      </div>
+    </div>
+
+    <!-- 6. DOYON -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('doyon')">
+        <div class="sec-ttl">⏳ الديون</div>
+        <span class="sec-tog" id="tog-doyon">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-doyon" style="max-height:0">
+        <!-- LABELS -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 80px 70px 26px;gap:4px;margin-bottom:3px;padding:0 2px;">
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">الاسم</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">الهاتف</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mut);text-align:center">📅 التاريخ</span>
+          <span style="font-size:9px;font-weight:700;color:var(--o);text-align:center">💰 المبلغ</span>
+          <span></span>
+        </div>
+        <div id="debt-rows"></div>
+        <button class="badd" onclick="addDebtRow()">➕ زيد دين آخر</button>
+        <button class="btn" style="background:var(--o);color:#fff;font-size:13px;padding:10px;" onclick="saveDebts()">✓ حفظ الديون</button>
+        <!-- TOTAL -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;padding:8px 12px;background:var(--sur);border-radius:8px;border:1px solid var(--bdr);">
+          <span style="font-size:11px;color:var(--mut);font-weight:700;">⏳ إجمالي الديون</span>
+          <span style="font-family:'Tajawal',sans-serif;font-size:18px;font-weight:800;color:var(--o)" id="dy-total">0 د</span>
+        </div>
+        <div id="debts-list" style="margin-top:6px;"><div class="empty"><div class="ei">⏳</div>لا توجد ديون</div></div>
+      </div>
+    </div>
+
+    <!-- 7. CHIKAT MO3TIYA -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('chikat')">
+        <div class="sec-ttl">🧾 الشيكات المعطاة</div>
+        <span class="sec-tog" id="tog-chikat">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-chikat" style="max-height:0">
+        <div style="display:grid;grid-template-columns:1fr 1fr 90px 70px 26px;gap:4px;margin-bottom:3px;padding:0 2px;">
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">الاسم</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">الهاتف</span>
+          <span style="font-size:9px;font-weight:700;color:var(--r);text-align:center">📅 تاريخ الصرف</span>
+          <span style="font-size:9px;font-weight:700;color:var(--o);text-align:center">💰 المبلغ</span>
+          <span></span>
+        </div>
+        <div id="chk-rows"></div>
+        <button class="badd" onclick="addChkRow()">➕ زيد شيك آخر</button>
+        <button class="btn" style="background:var(--b);color:#fff;font-size:13px;padding:10px;" onclick="saveChikat()">✓ حفظ الشيكات</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;padding:8px 12px;background:var(--sur);border-radius:8px;border:1px solid var(--bdr);">
+          <span style="font-size:11px;color:var(--mut);font-weight:700;">🧾 إجمالي المعطاة</span>
+          <span style="font-family:'Tajawal',sans-serif;font-size:18px;font-weight:800;color:var(--b)" id="chk-total">0 د</span>
+        </div>
+        <div id="chikat-list" style="margin-top:6px;"><div class="empty"><div class="ei">🧾</div>لا توجد شيكات معطاة</div></div>
+      </div>
+    </div>
+
+    <!-- 8. CHIKAT MAKHODA -->
+    <div class="sec">
+      <div class="sec-hd" onclick="tog('chikatm')">
+        <div class="sec-ttl">📥 الشيكات المأخوذة</div>
+        <span class="sec-tog" id="tog-chikatm">▼</span>
+      </div>
+      <div class="sec-bd col" id="bd-chikatm" style="max-height:0">
+        <div style="display:grid;grid-template-columns:1fr 90px 70px 26px;gap:4px;margin-bottom:3px;padding:0 2px;">
+          <span style="font-size:9px;font-weight:700;color:var(--mut)">اسم المعطي</span>
+          <span style="font-size:9px;font-weight:700;color:var(--r);text-align:center">📅 تاريخ الصرف</span>
+          <span style="font-size:9px;font-weight:700;color:var(--g);text-align:center">💰 المبلغ</span>
+          <span></span>
+        </div>
+        <div id="chkm-rows"></div>
+        <button class="badd" onclick="addChkmRow()">➕ زيد شيك آخر</button>
+        <button class="btn" style="background:var(--g);color:#fff;font-size:13px;padding:10px;" onclick="saveChikatM()">✓ حفظ الشيكات</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;padding:8px 12px;background:var(--sur);border-radius:8px;border:1px solid var(--bdr);">
+          <span style="font-size:11px;color:var(--mut);font-weight:700;">📥 إجمالي المأخوذة</span>
+          <span style="font-family:'Tajawal',sans-serif;font-size:18px;font-weight:800;color:var(--g)" id="chkm-total">0 د</span>
+        </div>
+        <div id="chikatm-list" style="margin-top:6px;"><div class="empty"><div class="ei">📥</div>لا توجد شيكات مأخوذة</div></div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end pg-main -->
+
+<!-- ===== SETTINGS PAGE ===== -->
+<div class="page" id="pg-settings">
+  <div class="topbar">
+    <button class="back-btn" onclick="showPage('pg-main')">← رجوع</button>
+    <div style="font-size:12px;color:var(--mut);font-weight:700">⚙️ الإعدادات</div>
+  </div>
+  <div class="content">
+    <div class="sec" style="margin-bottom:10px;">
+      <div style="padding:4px 0 10px;font-size:13px;font-weight:800;color:var(--w);">💬 WhatsApp الدفع</div>
+      <div class="field"><label>رقم WhatsApp (مع الكود الدولي)</label>
+        <input class="fi" id="cfg-wa" type="tel" placeholder="212612345678" inputmode="tel"/>
+        <div style="font-size:10px;color:var(--mut);margin-top:3px;">مثال: 212612345678 (بدون + في البداية)</div>
+      </div>
+      <div class="field"><label>💳 رابط الدفع (اختياري)</label>
+        <input class="fi" id="cfg-paylink" type="url" placeholder="https://payzone.ma/..."/>
+        <div style="font-size:10px;color:var(--mut);margin-top:3px;">CMI / PayZone / أي رابط دفع</div>
+      </div>
+      <button class="btn bg" style="font-size:13px;padding:11px;" onclick="saveSettings()">✓ حفظ الإعدادات</button>
+    </div>
+
+    <div class="sec">
+      <div style="padding:4px 0 10px;font-size:13px;font-weight:800;color:var(--w);">⚠️ خطر</div>
+      <button class="btn" style="background:rgba(231,76,60,0.15);color:var(--r);border:1px solid var(--r);font-size:13px;padding:11px;" onclick="clearAllData()">🗑 مسح كل البيانات</button>
+      <button class="btn" style="background:var(--sur);color:var(--mut);border:1px solid var(--bdr);font-size:13px;padding:11px;margin-top:6px;" onclick="changeMerchant()">✏️ تبديل اسم التجارة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CLIENT PAGE ===== -->
+<div class="page" id="pg-client">
+  <div class="topbar">
+    <button class="back-btn" onclick="closeClient()">← رجوع</button>
+    <div style="font-size:11px;color:var(--mut)">صفحة العميل</div>
+  </div>
+  <div class="content" style="padding:0;padding-bottom:20px;">
+    <div class="cl-hero">
+      <div class="cl-avatar" id="cl-av"></div>
+      <div class="cl-name" id="cl-nm"></div>
+      <div class="cl-phone" id="cl-ph"></div>
+    </div>
+
+    <!-- CLIENT STATS -->
+    <div class="cl-stats">
+      <div class="cl-stat"><div class="cl-stat-v" style="color:var(--g)" id="cl-total">0</div><div class="cl-stat-l">إجمالي الشراء</div></div>
+      <div class="cl-stat"><div class="cl-stat-v" style="color:var(--o)" id="cl-debt">0</div><div class="cl-stat-l">⏳ الديون</div></div>
+      <div class="cl-stat"><div class="cl-stat-v" style="color:var(--gold)" id="cl-salary-disp">—</div><div class="cl-stat-l">💼 الراتب</div></div>
+    </div>
+
+    <!-- PAY BUTTONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px;margin-bottom:4px;">
+      <button class="btn" style="background:#25D366;color:#fff;padding:10px;font-size:13px;" onclick="clientPayWhatsApp()">💬 طلب الدفع</button>
+      <button class="btn" style="background:var(--b);color:#fff;padding:10px;font-size:13px;" onclick="clientPayLink()">💳 رابط دفع</button>
+    </div>
+
+    <!-- CLIENT FATORA HISTORY -->
+    <div class="cl-history">
+      <div class="cl-hist-title">🧾 الفواتير بالتاريخ</div>
+      <div id="cl-sales-list"><div class="empty"><div class="ei">🧾</div>لا توجد فواتير</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+let merchant = localStorage.getItem('tj_merchant') || '';
+let db = JSON.parse(localStorage.getItem('tj_db') || '{"sales":[],"stock":[],"clients":[],"expenses":[],"incomes":[]}');
+if (!db.incomes) db.incomes = [];
+if (!db.debts)   db.debts   = [];
+if (!db.chikat)  db.chikat  = [];
+if (!db.chikatm) db.chikatm = [];
+
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0];
+
+function save() {
+  if (isDemoMode) {
+    // popup يطلب الكود
+    const modal = document.getElementById('demo-modal');
+    if (modal) modal.style.display = 'flex';
+    return;
+  }
+  localStorage.setItem('tj_db', JSON.stringify(db));
+  if (window.fbSave && merchant) window.fbSave(merchant, db);
+}
+
+// ===== TOAST =====
+function toast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ===== COLORS =====
+const COLS = ['#0cba7e','#3a8fef','#f07030','#9b59b6','#e74c3c','#f5c842'];
+const gc = i => COLS[i % COLS.length];
+
+// ===== LICENSE SYSTEM =====
+// الكودات المسموح بيها — أنت كتزيد هنا كود جديد لكل زبون
+const VALID_CODES = [
+  'TIJ-2026-DEMO',   // كود التجربة
+  'TIJ-2026-TEST',   // كود الاختبار
+  // زيد كودات الزبناء هنا 👇
+];
+
+let isLicensed  = localStorage.getItem('tj_licensed') === '1';
+let isDemoMode  = false;
+
+function doLogin() {
+  const n = document.getElementById('login-name').value.trim();
+  if (!n) { toast('⚠️ دخل اسمك!'); return; }
+  merchant = n;
+  localStorage.setItem('tj_merchant', merchant);
+  // إلا عنده ترخيص محفوظ — يدخل مباشرة
+  if (isLicensed) {
+    startApp();
+  } else {
+    // يروح لصفحة الكود
+    document.getElementById('code-merchant-name').textContent = merchant;
+    showPage('pg-code');
+  }
+}
+
+function checkLicense() {
+  const code  = document.getElementById('license-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('code-error');
+  if (!code) { errEl.textContent = '⚠️ دخل الكود!'; return; }
+
+  errEl.textContent = '⏳ جاري التحقق...';
+
+  // تحقق من Firebase
+  if (window.fbCheckLicense) {
+    window.fbCheckLicense(code, (valid) => {
+      if (valid) {
+        isLicensed = true;
+        localStorage.setItem('tj_licensed', '1');
+        localStorage.setItem('tj_code', code);
+        toast('✅ الكود صحيح! مرحباً بك 🎉');
+        isDemoMode = false;
+        errEl.textContent = '';
+        startApp();
+      } else {
+        errEl.textContent = '❌ الكود غلط — تواصل مع المورد';
+        document.getElementById('license-input').style.borderColor = 'var(--r)';
+        setTimeout(() => {
+          errEl.textContent = '';
+          document.getElementById('license-input').style.borderColor = '';
+        }, 3000);
+      }
+    });
+  } else {
+    // بلا إنترنت — تحقق محلي
+    const localCodes = ['TIJ-2026-DEMO','TIJ-2026-TEST'];
+    if (localCodes.includes(code)) {
+      isLicensed = true;
+      localStorage.setItem('tj_licensed', '1');
+      toast('✅ الكود صحيح!');
+      isDemoMode = false;
+      errEl.textContent = '';
+      startApp();
+    } else {
+      errEl.textContent = '❌ الكود غلط أو ماعندكش إنترنت';
+    }
+  }
+}
+
+function demoMode() {
+  isDemoMode = true;
+  isLicensed = false;
+  toast('👁️ وضع العرض — ملي تحفظ كيطلب منك الكود');
+  startApp();
+}
+
+function checkLicenseModal() {
+  const code  = document.getElementById('modal-code-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('modal-err');
+  if (!code) { errEl.textContent = '⚠️ دخل الكود!'; return; }
+  errEl.textContent = '⏳ جاري التحقق...';
+  if (window.fbCheckLicense) {
+    window.fbCheckLicense(code, (valid) => {
+      if (valid) {
+        isLicensed = true; isDemoMode = false;
+        localStorage.setItem('tj_licensed', '1');
+        localStorage.setItem('tj_code', code);
+        document.getElementById('demo-modal').style.display = 'none';
+        document.getElementById('demo-banner').style.display = 'none';
+        toast('✅ الكود صحيح! دابا تقدر تحفظ 🎉');
+      } else {
+        errEl.textContent = '❌ الكود غلط';
+        setTimeout(() => errEl.textContent = '', 2500);
+      }
+    });
+  }
+}
+
+
+
+function doLogout() { showPage('pg-settings'); loadSettings(); }
+
+function startApp() {
+  document.getElementById('tb-name').textContent = merchant;
+  document.getElementById('tb-date').textContent = today.toLocaleDateString('ar-MA',{day:'numeric',month:'short'});
+  // شارة وضع العرض
+  const demoBanner = document.getElementById('demo-banner');
+  if (demoBanner) demoBanner.style.display = isDemoMode ? 'block' : 'none';
+  showPage('pg-main');
+  initDate();
+  addRow();
+  addDebtRow();
+  addChkRow();
+  addChkmRow();
+  renderAll();
+  // جيب من السحاب
+  if (window.fbLoad) {
+    window.fbLoad(merchant, (cloudDb) => {
+      const localUpdated = db._updated || 0;
+      const cloudUpdated = cloudDb._updated || 0;
+      if (cloudUpdated > localUpdated) {
+        db = cloudDb;
+        if (!db.incomes)  db.incomes  = [];
+        if (!db.debts)    db.debts    = [];
+        if (!db.chikat)   db.chikat   = [];
+        if (!db.chikatm)  db.chikatm  = [];
+        localStorage.setItem('tj_db', JSON.stringify(db));
+        renderAll();
+        toast('☁️ تحدثات البيانات من السحاب!');
+      }
+    });
+  }
+  // تنبيه الشيكات
+  setTimeout(() => {
+    if (!db.chikat) return;
+    const now = new Date(); now.setHours(0,0,0,0);
+    const urgent = db.chikat.filter(c => {
+      if (c.cashed) return false;
+      const due = new Date(c.date); due.setHours(0,0,0,0);
+      const diff = Math.round((due - now) / 86400000);
+      return diff >= 0 && diff <= 7;
+    });
+    const late = db.chikat.filter(c => {
+      if (c.cashed) return false;
+      const due = new Date(c.date); due.setHours(0,0,0,0);
+      return due < now;
+    });
+    if (late.length)   toast(`🚨 ${late.length} شيك تأخرو!`);
+    else if (urgent.length) toast(`⚠️ ${urgent.length} شيك غادي يحل هاد الأسبوع!`);
+  }, 1000);
+  renderAll();
+}
+
+// ===== PAGES =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ===== TOGGLE SECTIONS =====
+function tog(name) {
+  const bd = document.getElementById('bd-' + name);
+  const t = document.getElementById('tog-' + name);
+  const isOpen = !bd.classList.contains('col');
+  if (isOpen) {
+    bd.style.maxHeight = '0'; bd.classList.add('col'); t.classList.remove('open');
+  } else {
+    bd.classList.remove('col'); bd.style.maxHeight = bd.scrollHeight + 3000 + 'px'; t.classList.add('open');
+  }
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+  setTimeout(() => {
+    renderStats();
+    renderSales();
+    renderIncome();
+    renderExpenses();
+    renderStock();
+    renderClients();
+    renderDatalist();
+    renderDebts();
+    renderChikat();
+    renderChikatM();
+  }, 0);
+}
+
+// ===== STATS =====
+function renderStats() {
+  const today_sales = db.sales.filter(s => s.date === todayStr && s.type !== 'نسية').reduce((a,s)=>a+s.amount,0);
+  const debtSales = db.sales.filter(s=>s.type==='نسية').reduce((a,s)=>a+s.amount,0);
+  const debtManual = (db.debts||[]).filter(d=>!d.paid).reduce((a,d)=>a+d.amount,0);
+  const debt = debtSales + debtManual;
+  const totalIn = db.sales.filter(s=>s.type!=='نسية').reduce((a,s)=>a+s.amount,0) + db.incomes.reduce((a,i)=>a+i.amount,0);
+  const totalEx = db.expenses.reduce((a,e)=>a+e.amount,0);
+  document.getElementById('st-day').textContent = today_sales.toFixed(0);
+  document.getElementById('st-exp').textContent = totalEx.toFixed(0);
+  document.getElementById('st-debt').textContent = debt.toFixed(0);
+  document.getElementById('st-profit').textContent = (totalIn - totalEx).toFixed(0);
+}
+
+// ===== INIT DATE =====
+function initDate() {
+  const d = document.getElementById('v-date');
+  if (d) d.value = todayStr;
+}
+
+// ===== MULTI ROWS =====
+let rows = [];
+const UNITS = ['كغ','غ','لتر','مل','علبة','كارطونة','قطعة','طن'];
+
+function addRow() {
+  const id = Date.now() + Math.random();
+  rows.push(id);
+  const c = document.getElementById('rows-container');
+  const d = document.createElement('div');
+  d.id = 'r-'+id;
+  d.style.cssText = 'margin-bottom:6px;';
+  const unitOpts = UNITS.map(u=>`<option value="${u}">${u}</option>`).join('');
+  d.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 54px 38px 54px 54px;gap:4px;align-items:center;margin-bottom:3px;">
+      <input class="fi ri" type="text" placeholder="البضاعة..." list="fatora-stock-list" style="padding:8px 7px;font-size:12px;" oninput="calcTot();autoFillUnit(this)"/>
+      <select class="fs ru" style="padding:8px 4px;font-size:11px;">${unitOpts}</select>
+      <input class="fi rq" type="number" placeholder="1" inputmode="decimal" style="padding:8px 4px;font-size:12px;text-align:center;" oninput="calcTot()"/>
+      <input class="fi rc" type="number" placeholder="0" inputmode="decimal" style="padding:8px 4px;font-size:12px;text-align:center;" oninput="calcTot()"/>
+      <input class="fi ra" type="number" placeholder="0" inputmode="decimal" style="padding:8px 4px;font-size:12px;text-align:center;" oninput="calcTot()"/>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:var(--sur);border-radius:7px;border:1px solid var(--bdr);">
+      <div style="display:flex;gap:10px;font-size:11px;">
+        <span>💸 <strong class="rsub-cost" style="color:var(--o)">—</strong></span>
+        <span>💰 <strong class="rsub-sell" style="color:var(--g)">—</strong></span>
+        <span>📈 <strong class="rsub-profit" style="color:var(--mut)">—</strong></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span class="rsub-stock" style="font-size:10px;color:var(--mut)"></span>
+        <button class="xbtn" style="width:26px;height:26px;font-size:12px;" onclick="removeRow('${id}')">🗑</button>
+      </div>
+    </div>
+  `;
+  c.appendChild(d);
+  calcTot();
+}
+
+function autoFillUnit(input) {
+  const name = input.value.trim().toLowerCase();
+  const row  = input.closest('div[id^="r-"]') || input.parentElement.parentElement;
+  const unitSel = row.querySelector('.ru');
+  const stockEl = row.querySelector('.rsub-stock');
+  const found = db.stock.find(s => s.name.trim().toLowerCase() === name);
+  if (found) {
+    if (unitSel) {
+      for (let o of unitSel.options) { if (o.value === found.unit) { unitSel.value = found.unit; break; } }
+    }
+    if (stockEl) {
+      const col = found.qty <= found.min ? 'var(--r)' : found.qty <= found.min*2 ? 'var(--o)' : 'var(--mut)';
+      stockEl.style.color = col;
+      stockEl.textContent = `📦 ${found.qty} ${found.unit}`;
+    }
+  } else if (stockEl) {
+    stockEl.textContent = '';
+  }
+}
+
+function removeRow(id) {
+  rows = rows.filter(r=>r!=id);
+  const el = document.getElementById('r-'+id);
+  if (el) el.remove();
+  calcTot();
+}
+
+function calcTot() {
+  let totalSell=0, totalCost=0;
+  document.querySelectorAll('#rows-container > div').forEach(row => {
+    const qty    = parseFloat(row.querySelector('.rq')?.value)||1;
+    const cost   = parseFloat(row.querySelector('.rc')?.value)||0;
+    const sell   = parseFloat(row.querySelector('.ra')?.value)||0;
+    const rowCost   = cost * qty;
+    const rowSell   = sell * qty;
+    const rowProfit = rowSell - rowCost;
+    totalCost += rowCost;
+    totalSell += rowSell;
+    const costEl   = row.querySelector('.rsub-cost');
+    const sellEl   = row.querySelector('.rsub-sell');
+    const profitEl = row.querySelector('.rsub-profit');
+    if (costEl && sellEl && profitEl) {
+      if (sell > 0 || cost > 0) {
+        costEl.textContent   = rowCost.toFixed(0) + ' د';
+        sellEl.textContent   = rowSell.toFixed(0) + ' د';
+        profitEl.textContent = rowProfit.toFixed(0) + ' د';
+        profitEl.style.color = rowProfit >= 0 ? 'var(--b)' : 'var(--r)';
+      } else {
+        costEl.textContent = '—'; sellEl.textContent = '—'; profitEl.textContent = '—';
+        profitEl.style.color = 'var(--mut)';
+      }
+    }
+  });
+  const profit = totalSell - totalCost;
+  const box = document.getElementById('tbox');
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="tr2"><span class="trl">💸 إجمالي الدفع</span><span class="trv" style="color:var(--o)">${totalCost.toFixed(0)} درهم</span></div>
+    <div class="tr2"><span class="trl">💰 إجمالي البيع</span><span class="trv" style="color:var(--g)">${totalSell.toFixed(0)} درهم</span></div>
+    <div class="tdiv"></div>
+    <div class="tr2"><span class="trl">📈 الكسب الإجمالي</span><span class="trv" style="color:${profit>=0?'var(--b)':'var(--r)'};font-size:18px">${profit.toFixed(0)} درهم</span></div>
+  `;
+}
+
+// ===== SAVE SALE =====
+function saveSale() {
+  const type   = document.getElementById('v-type').value;
+  const client = document.getElementById('v-client').value.trim();
+  const date   = document.getElementById('v-date').value || todayStr;
+  const items  = document.querySelectorAll('.ri');
+  const units  = document.querySelectorAll('.ru');
+  const qtys   = document.querySelectorAll('.rq');
+  const costs  = document.querySelectorAll('.rc');
+  const amts   = document.querySelectorAll('.ra');
+
+  let added=0, saleItems=[];
+  const gid = Date.now();
+
+  items.forEach((el,i) => {
+    const item   = el.value.trim();
+    const unit   = units[i]?.value || 'قطعة';
+    const qty    = parseFloat(qtys[i]?.value)||1;
+    const cost1  = parseFloat(costs[i]?.value)||0;   // ثمن الواحدة دفع
+    const sell1  = parseFloat(amts[i]?.value)||0;    // ثمن الواحدة بيع
+    const totalCost = cost1 * qty;
+    const totalSell = sell1 * qty;
+    if (item && sell1 > 0) {
+      const rec = { id:gid+i, item, unit, qty, cost1, sell1, cost:totalCost, amount:totalSell, profit:totalSell-totalCost, type, client, date };
+      db.sales.push(rec);
+      saleItems.push(rec);
+      added++;
+      // نقص من المخزون تلقائياً
+      const stockItem = db.stock.find(s => s.name.trim().toLowerCase() === item.trim().toLowerCase());
+      if (stockItem) {
+        stockItem.qty -= qty;
+        if (stockItem.qty < 0) stockItem.qty = 0;
+      }
+    }
+  });
+
+  if (!added) { toast('⚠️ زيد ولو بضاعة واحدة!'); return; }
+
+  save();
+  toast(`✅ تحفظت ${added} بضاعة!`);
+  showFatora(saleItems, client, type, date);
+
+  // reset
+  rows = [];
+  document.getElementById('rows-container').innerHTML = '';
+  document.getElementById('v-client').value = '';
+  document.getElementById('tbox').style.display = 'none';
+  initDate();
+  addRow();
+  renderAll();
+}
+
+// ===== FATORA DISPLAY =====
+function showFatora(items, client, type, date) {
+  _fatora_client = client;
+  _fatora_total  = items.reduce((a,s)=>a+s.amount,0);
+  document.getElementById('f-merchant').textContent = '🏪 ' + merchant;
+  document.getElementById('f-client').textContent = client ? '👤 ' + client : '';
+  document.getElementById('f-date-disp').textContent = '📅 ' + date;
+
+  const total  = items.reduce((a,s)=>a+s.amount,0);
+  const profit = items.reduce((a,s)=>a+s.profit,0);
+
+  const tbody = document.getElementById('f-body');
+  tbody.innerHTML = items.map(s=>`
+    <tr>
+      <td style="font-weight:700">${s.item}</td>
+      <td style="color:var(--mut);text-align:center">${s.qty} ${s.unit}</td>
+      <td style="color:var(--o);text-align:center">${s.cost1}</td>
+      <td style="color:var(--g);text-align:center">${s.sell1}</td>
+      <td style="color:var(--b);font-weight:800;text-align:center;background:rgba(58,143,239,0.08);border-radius:4px;">${s.amount.toFixed(0)}</td>
+    </tr>
+  `).join('') + `
+    <tr style="border-top:2px solid var(--bdr);">
+      <td colspan="4" style="font-size:11px;color:var(--mut);font-weight:700;padding-top:8px;">الإجمالي</td>
+      <td style="color:var(--g);font-family:'Tajawal',sans-serif;font-size:16px;font-weight:800;text-align:center;padding-top:8px;">${total.toFixed(0)}</td>
+    </tr>
+  `;
+  document.getElementById('f-total').textContent = total.toFixed(0) + ' درهم';
+  document.getElementById('f-profit').textContent = profit.toFixed(0);
+  const tc = {'كاش':'bgg','نسية':'bgo','بطاقة':'bgb','تحويل':'bgb'};
+  document.getElementById('f-type-badge').innerHTML = `<span class="bdg ${tc[type]||'bgg'}">${type}</span>`;
+  document.getElementById('fatora-box').style.display = 'block';
+  document.getElementById('fatora-box').scrollIntoView({behavior:'smooth'});
+}
+
+function closeFatora() { document.getElementById('fatora-box').style.display='none'; }
+
+// ===== SALES LIST =====
+function renderSales() {
+  const el = document.getElementById('sales-list');
+  if (!el) return;
+  const list = [...db.sales].reverse().slice(0,25);
+  if (!list.length) { el.innerHTML='<div class="empty"><div class="ei">🛒</div>لا توجد بيعات بعد</div>'; return; }
+  el.innerHTML = list.map(s=>`
+    <div class="li">
+      <div class="lico" style="background:var(--gd)">${s.type==='كاش'?'💵':s.type==='نسية'?'📝':s.type==='بطاقة'?'💳':'📱'}</div>
+      <div class="lin">
+        <div class="lnm">${s.item} <span style="color:var(--mut);font-size:10px;font-weight:400">${s.qty||1} ${s.unit||''}</span></div>
+        <div class="lsb">${s.client||'—'} · ${s.date}<br/>
+          <span style="color:var(--o)">دفع:${s.cost||0}</span> ·
+          <span style="color:var(--g)">بيع:${s.amount}</span> ·
+          <span style="color:var(--b)">كسب:${s.profit||0}</span>
+        </div>
+      </div>
+      <div class="lr">
+        <span class="bdg ${s.type==='كاش'?'bgg':s.type==='نسية'?'bgo':'bgb'}">${s.type}</span>
+        <button class="delbtn" onclick="delSale(${s.id})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function delSale(id) { db.sales=db.sales.filter(s=>s.id!==id); save(); renderAll(); toast('🗑 حذفت'); }
+
+// ===== INCOME =====
+function addIncome() {
+  const desc=document.getElementById('in-desc').value.trim();
+  const amount=parseFloat(document.getElementById('in-amount').value);
+  if (!desc||!amount||amount<=0) { toast('⚠️ عمر الحقول!'); return; }
+  db.incomes.push({ id:Date.now(), desc, amount, date:todayStr });
+  save();
+  document.getElementById('in-desc').value='';
+  document.getElementById('in-amount').value='';
+  toast('✅ تحفظ المدخول!');
+  renderIncome(); renderStats();
+}
+
+function renderIncome() {
+  const el = document.getElementById('income-list');
+  if (!el) return;
+  const all = [...db.sales.filter(s=>s.type!=='نسية').map(s=>({id:'s'+s.id,desc:s.item,amount:s.amount,date:s.date,tag:'بيعة'})),
+    ...db.incomes.map(i=>({...i,tag:'مدخول'}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,12);
+  if (!all.length) { el.innerHTML='<div class="empty" style="padding:10px"><div class="ei" style="font-size:20px">📈</div>لا توجد مدخولات</div>'; return; }
+  el.innerHTML = all.map(i=>`
+    <div class="li">
+      <div class="lico" style="background:var(--gd)">${i.tag==='بيعة'?'🛒':'💰'}</div>
+      <div class="lin"><div class="lnm">${i.desc}</div><div class="lsb">${i.date} · <span class="bdg bgg">${i.tag}</span></div></div>
+      <div class="lr">
+        <span class="lamt" style="color:var(--g)">+${i.amount}</span>
+        ${i.tag==='مدخول'?`<button class="delbtn" onclick="delIncome(${i.id})">🗑</button>`:''}
+      </div>
+    </div>
+  `).join('');
+  const bd = document.getElementById('bd-madkhol');
+  if (!bd.classList.contains('col')) bd.style.maxHeight = bd.scrollHeight + 3000 + 'px';
+}
+
+function delIncome(id) { db.incomes=db.incomes.filter(i=>i.id!==id); save(); renderIncome(); renderStats(); toast('🗑'); }
+
+// ===== EXPENSES =====
+function addExpense() {
+  const desc=document.getElementById('ex-desc').value.trim();
+  const amount=parseFloat(document.getElementById('ex-amount').value);
+  if (!desc||!amount||amount<=0) { toast('⚠️ عمر الحقول!'); return; }
+  db.expenses.push({ id:Date.now(), desc, amount, date:todayStr });
+  save();
+  document.getElementById('ex-desc').value='';
+  document.getElementById('ex-amount').value='';
+  toast('✅ تحفظ المصروف!');
+  renderExpenses(); renderStats();
+}
+
+function renderExpenses() {
+  const el = document.getElementById('expense-list');
+  if (!el) return;
+  if (!db.expenses.length) { el.innerHTML='<div class="empty" style="padding:10px"><div class="ei" style="font-size:20px">💸</div>لا توجد مصاريف</div>'; return; }
+  el.innerHTML = [...db.expenses].reverse().slice(0,12).map(e=>`
+    <div class="li">
+      <div class="lico" style="background:var(--rd)">💸</div>
+      <div class="lin"><div class="lnm">${e.desc}</div><div class="lsb">${e.date}</div></div>
+      <div class="lr">
+        <span class="lamt" style="color:var(--r)">-${e.amount}</span>
+        <button class="delbtn" onclick="delExpense(${e.id})">🗑</button>
+      </div>
+    </div>
+  `).join('');
+  const bd = document.getElementById('bd-massrif');
+  if (!bd.classList.contains('col')) bd.style.maxHeight = bd.scrollHeight + 3000 + 'px';
+}
+
+function delExpense(id) { db.expenses=db.expenses.filter(e=>e.id!==id); save(); renderExpenses(); renderStats(); toast('🗑'); }
+
+// ===== STOCK =====
+function addStock() {
+  const name=document.getElementById('st-name').value.trim();
+  const qty=parseFloat(document.getElementById('st-qty').value);
+  const unit=document.getElementById('st-unit').value;
+  const min=parseFloat(document.getElementById('st-min').value)||10;
+  if (!name||!qty) { toast('⚠️ عمر الحقول!'); return; }
+  const ex=db.stock.find(s=>s.name===name);
+  if (ex) ex.qty+=qty; else db.stock.push({id:Date.now(),name,qty,unit,min});
+  save();
+  document.getElementById('st-name').value='';
+  document.getElementById('st-qty').value='';
+  toast('✅ تحفظ المنتج!');
+  renderStock();
+  const bd=document.getElementById('bd-stock');
+  if(!bd.classList.contains('col')) bd.style.maxHeight=bd.scrollHeight+3000+'px';
+}
+
+function renderStock() {
+  const el=document.getElementById('stock-list');
+  if (!el) return;
+  // update datalist for fatora autocomplete
+  const sdl = document.getElementById('stock-datalist');
+  if (sdl) sdl.innerHTML = db.stock.map(s=>`<option value="${s.name}">`).join('');
+  const fdl = document.getElementById('fatora-stock-list');
+  if (fdl) fdl.innerHTML = db.stock.map(s=>`<option value="${s.name}">`).join('');
+
+  if (!db.stock.length) { el.innerHTML='<div class="empty"><div class="ei">📦</div>المخزون فارغ</div>'; return; }
+  el.innerHTML=db.stock.map((s,i)=>{
+    const pct=Math.min(100,(s.qty/(s.min*3))*100);
+    const col=pct<30?'var(--r)':pct<60?'var(--o)':'var(--g)';
+    const isLow = s.qty <= s.min;
+    return `
+      <div class="li" style="${isLow?'border:1px solid var(--r);border-radius:10px;':''}">
+        <div class="lico" style="background:${gc(i)}22;color:${gc(i)}">📦</div>
+        <div class="lin">
+          <div class="lnm">${s.name} ${isLow?'⚠️':''}</div>
+          <div style="display:flex;align-items:baseline;gap:5px;margin:2px 0;">
+            <span style="font-family:'Tajawal',sans-serif;font-size:22px;font-weight:800;color:${col}">${s.qty}</span>
+            <span style="font-size:12px;color:var(--mut);font-weight:700">${s.unit}</span>
+            <span style="font-size:10px;color:var(--mut);margin-right:4px">· حد: ${s.min} ${s.unit}</span>
+          </div>
+          <div class="stbw"><div class="stb" style="width:${pct}%;background:${col}"></div></div>
+        </div>
+        <div class="lr">
+          <button class="delbtn" style="background:var(--bd);color:var(--b);font-size:15px;width:30px;height:30px;" onclick="addQty(${s.id})">+</button>
+          <button class="delbtn" onclick="delStock(${s.id})">🗑</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function addQty(id) {
+  const q=prompt('زيد كمية:'); if(!q||isNaN(q)) return;
+  const s=db.stock.find(s=>s.id===id); if(s){s.qty+=parseFloat(q);save();renderStock();toast('✅');}
+}
+function delStock(id){db.stock=db.stock.filter(s=>s.id!==id);save();renderStock();toast('🗑');}
+
+// ===== CLIENTS =====
+function addClient() {
+  const name     = document.getElementById('cl-name').value.trim();
+  const phone    = document.getElementById('cl-phone').value.trim();
+  const salary   = parseFloat(document.getElementById('cl-salary').value)||0;
+  const debtInit = parseFloat(document.getElementById('cl-debt-init').value)||0;
+  if (!name) { toast('⚠️ دخل الاسم!'); return; }
+  if (db.clients.find(c=>c.name===name)) { toast('⚠️ العميل موجود!'); return; }
+  db.clients.push({ id:Date.now(), name, phone, salary, debtInit });
+  save();
+  document.getElementById('cl-name').value='';
+  document.getElementById('cl-phone').value='';
+  document.getElementById('cl-salary').value='';
+  document.getElementById('cl-debt-init').value='';
+  toast('✅ تحفظ العميل!');
+  renderClients(); renderDatalist();
+  const bd=document.getElementById('bd-clients');
+  if(!bd.classList.contains('col')) bd.style.maxHeight=bd.scrollHeight+3000+'px';
+}
+
+function renderDatalist() {
+  const dl=document.getElementById('clients-datalist');
+  dl.innerHTML=db.clients.map(c=>`<option value="${c.name}">`).join('');
+}
+
+function renderClients() {
+  const el=document.getElementById('clients-list');
+  if (!el) return;
+  if (!db.clients.length) { el.innerHTML='<div class="empty"><div class="ei">👥</div>لا يوجد عملاء</div>'; return; }
+  el.innerHTML=db.clients.map((c,i)=>{
+    const debtSales = db.sales.filter(s=>s.type==='نسية'&&s.client===c.name).reduce((a,s)=>a+s.amount,0);
+    const totalDebt = debtSales + (c.debtInit||0);
+    const total=db.sales.filter(s=>s.client===c.name).reduce((a,s)=>a+s.amount,0);
+    const count=db.sales.filter(s=>s.client===c.name).length;
+    return `
+      <div class="li" onclick="openClient(${c.id})" style="cursor:pointer;">
+        <div class="lico" style="background:${gc(i)}22;color:${gc(i)};border-radius:50%;width:36px;height:36px;">${c.name[0]}</div>
+        <div class="lin">
+          <div class="lnm">${c.name}</div>
+          <div class="lsb">${c.phone||'—'} · ${count} فاتورة · ${total} درهم<br/>
+            ${totalDebt>0?`<span class="bdg bgo">⏳ دين: ${totalDebt} درهم</span>`:'<span class="bdg bgg">بلا دين ✓</span>'}
+            ${c.salary>0?`<span class="bdg" style="background:var(--goldd);color:var(--gold);margin-right:4px">💼 ${c.salary} د</span>`:''}
+          </div>
+        </div>
+        <button class="delbtn" onclick="event.stopPropagation();delClient(${c.id})">🗑</button>
+      </div>`;
+  }).join('');
+}
+
+function delClient(id){db.clients=db.clients.filter(c=>c.id!==id);save();renderClients();toast('🗑');}
+
+// ===== CLIENT PAGE =====
+function openClient(id) {
+  const c = db.clients.find(c=>c.id===id);
+  if (!c) return;
+  const idx = db.clients.indexOf(c);
+  const color = gc(idx);
+  const sales = db.sales.filter(s=>s.client===c.name);
+  const total = sales.reduce((a,s)=>a+s.amount,0);
+  const debtSales = sales.filter(s=>s.type==='نسية').reduce((a,s)=>a+s.amount,0);
+  const totalDebt = debtSales + (c.debtInit||0);
+
+  // hero
+  document.getElementById('cl-av').textContent = c.name[0];
+  document.getElementById('cl-av').style.cssText = `background:${color}22;color:${color};width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin:0 auto 8px;`;
+  document.getElementById('cl-nm').textContent = c.name;
+  document.getElementById('cl-ph').textContent = c.phone || '—';
+
+  // stats
+  document.getElementById('cl-total').textContent = total.toFixed(0) + ' د';
+  document.getElementById('cl-debt').textContent = totalDebt > 0 ? totalDebt.toFixed(0) + ' د' : '✓';
+
+  // group sales by date → each date = one fatora
+  const byDate = {};
+  sales.forEach(s => {
+    if (!byDate[s.date]) byDate[s.date] = [];
+    byDate[s.date].push(s);
+  });
+  const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+  document.getElementById('cl-salary-disp').textContent = c.salary > 0 ? c.salary + ' د' : '—';
+
+  const histEl = document.getElementById('cl-sales-list');
+  if (!dates.length) {
+    histEl.innerHTML='<div class="empty"><div class="ei">🧾</div>لا توجد فواتير</div>';
+  } else {
+    histEl.innerHTML = dates.map(date => {
+      const items = byDate[date];
+      const dayTotal = items.reduce((a,s)=>a+s.amount,0);
+      const dayCost = items.reduce((a,s)=>a+(s.cost||0),0);
+      const dayProfit = dayTotal - dayCost;
+      const type = items[0].type;
+      const typeColor = type==='كاش'?'bgg':type==='نسية'?'bgo':'bgb';
+      return `
+        <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:11px;padding:12px;margin-bottom:9px;">
+          <!-- FATORA HEADER -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--bdr);">
+            <div>
+              <div style="font-size:12px;font-weight:800;color:var(--w);">📅 ${date}</div>
+              <span class="bdg ${typeColor}" style="margin-top:3px;display:inline-block">${type}</span>
+            </div>
+            <div style="text-align:left">
+              <div style="font-family:'Tajawal',sans-serif;font-size:18px;font-weight:800;color:var(--g)">${dayTotal.toFixed(0)} درهم</div>
+              <div style="font-size:9px;color:var(--mut)">كسب: <span style="color:var(--b)">${dayProfit.toFixed(0)}</span> د</div>
+            </div>
+          </div>
+          <!-- ITEMS -->
+          ${items.map(s=>`
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(31,48,80,0.5);">
+              <div>
+                <div style="font-size:12px;color:var(--txt);font-weight:600">${s.item}</div>
+                <div style="font-size:10px;color:var(--mut)">${s.qty||1} ${s.unit||''}</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <span style="font-size:10px;color:var(--o)">💸${s.cost1||s.cost||0}/وحدة</span>
+                <span style="font-size:12px;font-weight:800;color:var(--g)">💰${s.amount} د</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
+  }
+
+  showPage('pg-client');
+}
+
+function closeClient() { showPage('pg-main'); }
+
+// ===== DEBTS =====
+let debtRows = [];
+
+function initDebtDate() {
+  // will be set per-row
+}
+
+function addDebtRow() {
+  const id = Date.now() + Math.random();
+  debtRows.push(id);
+  const c = document.getElementById('debt-rows');
+  if (!c) return;
+  const d = document.createElement('div');
+  d.id = 'dr-' + id;
+  d.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 80px 70px 26px;gap:4px;margin-bottom:5px;align-items:center;';
+  d.innerHTML = `
+    <input class="fi dy-name" type="text" placeholder="الاسم..." style="padding:8px 7px;font-size:12px;"/>
+    <input class="fi dy-phone" type="tel" placeholder="0600..." style="padding:8px 7px;font-size:12px;" inputmode="tel"/>
+    <input class="fi dy-date" type="date" value="${todayStr}" style="padding:8px 4px;font-size:11px;"/>
+    <input class="fi dy-amount" type="number" placeholder="0" inputmode="decimal" style="padding:8px 5px;font-size:12px;text-align:center;"/>
+    <button class="xbtn" style="width:26px;height:36px;font-size:12px;" onclick="removeDebtRow('${id}')">🗑</button>
+  `;
+  c.appendChild(d);
+}
+
+function removeDebtRow(id) {
+  debtRows = debtRows.filter(r => r != id);
+  const el = document.getElementById('dr-' + id);
+  if (el) el.remove();
+}
+
+function saveDebts() {
+  const c = document.getElementById('debt-rows');
+  if (!c) return;
+  const rows = c.querySelectorAll('[id^="dr-"]');
+  let added = 0;
+  if (!db.debts) db.debts = [];
+  rows.forEach(row => {
+    const name   = row.querySelector('.dy-name')?.value.trim();
+    const phone  = row.querySelector('.dy-phone')?.value.trim();
+    const date   = row.querySelector('.dy-date')?.value || todayStr;
+    const amount = parseFloat(row.querySelector('.dy-amount')?.value);
+    if (name && amount > 0) {
+      db.debts.push({ id: Date.now() + added, name, phone, date, amount, paid: false });
+      added++;
+    }
+  });
+  if (!added) { toast('⚠️ زيد ولو دين واحد!'); return; }
+  save();
+  // reset rows
+  debtRows = [];
+  c.innerHTML = '';
+  addDebtRow();
+  toast(`✅ تحفظو ${added} ديون!`);
+  renderDebts();
+  renderStats();
+  const bd = document.getElementById('bd-doyon');
+  if (bd && !bd.classList.contains('col')) bd.style.maxHeight = bd.scrollHeight + 3000 + 'px';
+}
+
+function markPaid(id) {
+  const d = db.debts.find(d => d.id === id);
+  if (d) { d.paid = !d.paid; save(); renderDebts(); renderStats(); toast(d.paid ? '✅ تسدد!' : '↩️ رجع دين'); }
+}
+
+function delDebt(id) {
+  db.debts = db.debts.filter(d => d.id !== id);
+  save(); renderDebts(); renderStats(); toast('🗑');
+}
+
+function renderDebts() {
+  if (!db.debts) db.debts = [];
+  const totalEl = document.getElementById('dy-total');
+  const total = db.debts.filter(d => !d.paid).reduce((a, d) => a + d.amount, 0);
+  if (totalEl) totalEl.textContent = total.toFixed(0) + ' د';
+  const el = document.getElementById('debts-list');
+  if (!el) return;
+  if (!db.debts.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">⏳</div>لا توجد ديون</div>';
+    return;
+  }
+  const sorted = [...db.debts].sort((a, b) => {
+    if (a.paid !== b.paid) return a.paid ? 1 : -1;
+    return b.date.localeCompare(a.date);
+  });
+  el.innerHTML = sorted.map(d => `
+    <div class="li" style="${d.paid ? 'opacity:0.5;' : ''}">
+      <div class="lico" style="background:${d.paid ? 'var(--gd)' : 'var(--od)'}">${d.paid ? '✅' : '⏳'}</div>
+      <div class="lin">
+        <div class="lnm" style="${d.paid ? 'text-decoration:line-through;color:var(--mut)' : ''}">${d.name}</div>
+        <div class="lsb">${d.phone || '—'} · 📅 ${d.date}</div>
+      </div>
+      <div class="lr">
+        <span class="lamt" style="color:${d.paid ? 'var(--g)' : 'var(--o)'}">${d.amount} د</span>
+        <div style="display:flex;gap:4px;margin-top:2px;">
+          <button class="delbtn" style="background:${d.paid ? 'var(--od)' : 'var(--gd)'};color:${d.paid ? 'var(--o)' : 'var(--g)'};" onclick="markPaid(${d.id})">${d.paid ? '↩️' : '✓'}</button>
+          <button class="delbtn" onclick="delDebt(${d.id})">🗑</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== CHIKAT =====
+let chkRows = [];
+
+function addChkRow() {
+  const id = Date.now() + Math.random();
+  chkRows.push(id);
+  const c = document.getElementById('chk-rows');
+  if (!c) return;
+  const d = document.createElement('div');
+  d.id = 'ckr-' + id;
+  d.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 90px 70px 26px;gap:4px;margin-bottom:5px;align-items:center;';
+  d.innerHTML = `
+    <input class="fi ck-name" type="text" placeholder="الاسم..." style="padding:8px 7px;font-size:12px;"/>
+    <input class="fi ck-phone" type="tel" placeholder="0600..." style="padding:8px 7px;font-size:12px;" inputmode="tel"/>
+    <input class="fi ck-date" type="date" style="padding:8px 4px;font-size:11px;"/>
+    <input class="fi ck-amount" type="number" placeholder="0" inputmode="decimal" style="padding:8px 5px;font-size:12px;text-align:center;"/>
+    <button class="xbtn" style="width:26px;height:36px;font-size:12px;" onclick="removeChkRow('${id}')">🗑</button>
+  `;
+  c.appendChild(d);
+}
+
+function removeChkRow(id) {
+  chkRows = chkRows.filter(r => r != id);
+  const el = document.getElementById('ckr-' + id);
+  if (el) el.remove();
+}
+
+function saveChikat() {
+  const c = document.getElementById('chk-rows');
+  if (!c) return;
+  const rows = c.querySelectorAll('[id^="ckr-"]');
+  let added = 0;
+  if (!db.chikat) db.chikat = [];
+  rows.forEach(row => {
+    const name   = row.querySelector('.ck-name')?.value.trim();
+    const phone  = row.querySelector('.ck-phone')?.value.trim();
+    const date   = row.querySelector('.ck-date')?.value;
+    const amount = parseFloat(row.querySelector('.ck-amount')?.value);
+    if (name && date && amount > 0) {
+      db.chikat.push({ id: Date.now() + added, name, phone, date, amount, cashed: false });
+      added++;
+    }
+  });
+  if (!added) { toast('⚠️ عمر ولو شيك واحد!'); return; }
+  save();
+  chkRows = [];
+  c.innerHTML = '';
+  addChkRow();
+  toast(`✅ تحفظو ${added} شيكات!`);
+  renderChikat();
+  const bd = document.getElementById('bd-chikat');
+  if (bd && !bd.classList.contains('col')) bd.style.maxHeight = bd.scrollHeight + 3000 + 'px';
+}
+
+function cashChk(id) {
+  const c = db.chikat.find(c => c.id === id);
+  if (c) { c.cashed = !c.cashed; save(); renderChikat(); toast(c.cashed ? '✅ تصرف!' : '↩️ رجع'); }
+}
+
+function delChk(id) {
+  db.chikat = db.chikat.filter(c => c.id !== id);
+  save(); renderChikat(); toast('🗑');
+}
+
+function renderChikat() {
+  if (!db.chikat) db.chikat = [];
+  const totalEl = document.getElementById('chk-total');
+  const pending = db.chikat.filter(c => !c.cashed);
+  const total = pending.reduce((a, c) => a + c.amount, 0);
+  if (totalEl) totalEl.textContent = total.toFixed(0) + ' د';
+  const el = document.getElementById('chikat-list');
+  if (!el) return;
+  if (!db.chikat.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">🧾</div>لا توجد شيكات</div>';
+    return;
+  }
+
+  // check alerts: due within 7 days
+  const now = new Date(); now.setHours(0,0,0,0);
+  const sorted = [...db.chikat].sort((a, b) => {
+    if (a.cashed !== b.cashed) return a.cashed ? 1 : -1;
+    return a.date.localeCompare(b.date);
+  });
+
+  el.innerHTML = sorted.map(c => {
+    const due    = new Date(c.date); due.setHours(0,0,0,0);
+    const diff   = Math.round((due - now) / 86400000);
+    const isUrgent = !c.cashed && diff >= 0 && diff <= 7;
+    const isLate   = !c.cashed && diff < 0;
+    let alertBadge = '';
+    if (isLate)   alertBadge = `<span class="bdg" style="background:rgba(231,76,60,0.15);color:var(--r);margin-right:4px">🚨 تأخر ${Math.abs(diff)} يوم</span>`;
+    else if (isUrgent) alertBadge = `<span class="bdg" style="background:rgba(240,112,48,0.15);color:var(--o);margin-right:4px">⚠️ باقي ${diff} يوم</span>`;
+    return `
+    <div class="li" style="${c.cashed ? 'opacity:0.45;' : isLate ? 'border:1px solid var(--r);border-radius:10px;' : isUrgent ? 'border:1px solid var(--o);border-radius:10px;' : ''}">
+      <div class="lico" style="background:${c.cashed ? 'var(--gd)' : isLate ? 'rgba(231,76,60,0.15)' : 'var(--bd)'}">${c.cashed ? '✅' : isLate ? '🚨' : '🧾'}</div>
+      <div class="lin">
+        <div class="lnm" style="${c.cashed ? 'text-decoration:line-through;color:var(--mut)' : ''}">${c.name}</div>
+        <div class="lsb">${c.phone || '—'} · 📅 ${c.date}<br/>${alertBadge}</div>
+      </div>
+      <div class="lr">
+        <span class="lamt" style="color:${c.cashed ? 'var(--g)' : 'var(--b)'}">${c.amount} د</span>
+        <div style="display:flex;gap:4px;margin-top:2px;">
+          <button class="delbtn" style="background:${c.cashed ? 'var(--od)' : 'var(--gd)'};color:${c.cashed ? 'var(--o)' : 'var(--g)'};" onclick="cashChk(${c.id})">${c.cashed ? '↩️' : '✓'}</button>
+          <button class="delbtn" onclick="delChk(${c.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== CHIKAT MAKHODA =====
+let chkmRows = [];
+
+function addChkmRow() {
+  const id = Date.now() + Math.random();
+  chkmRows.push(id);
+  const c = document.getElementById('chkm-rows');
+  if (!c) return;
+  const d = document.createElement('div');
+  d.id = 'ckrm-' + id;
+  d.style.cssText = 'display:grid;grid-template-columns:1fr 90px 70px 26px;gap:4px;margin-bottom:5px;align-items:center;';
+  d.innerHTML = `
+    <input class="fi ckm-name" type="text" placeholder="اسم اللي عطى الشيك..." style="padding:8px 7px;font-size:12px;"/>
+    <input class="fi ckm-date" type="date" style="padding:8px 4px;font-size:11px;"/>
+    <input class="fi ckm-amount" type="number" placeholder="0" inputmode="decimal" style="padding:8px 5px;font-size:12px;text-align:center;"/>
+    <button class="xbtn" style="width:26px;height:36px;font-size:12px;" onclick="removeChkmRow('${id}')">🗑</button>
+  `;
+  c.appendChild(d);
+}
+
+function removeChkmRow(id) {
+  chkmRows = chkmRows.filter(r => r != id);
+  const el = document.getElementById('ckrm-' + id);
+  if (el) el.remove();
+}
+
+function saveChikatM() {
+  const c = document.getElementById('chkm-rows');
+  if (!c) return;
+  const rows = c.querySelectorAll('[id^="ckrm-"]');
+  let added = 0;
+  if (!db.chikatm) db.chikatm = [];
+  rows.forEach(row => {
+    const name   = row.querySelector('.ckm-name')?.value.trim();
+    const date   = row.querySelector('.ckm-date')?.value;
+    const amount = parseFloat(row.querySelector('.ckm-amount')?.value);
+    if (name && date && amount > 0) {
+      db.chikatm.push({ id: Date.now() + added, name, date, amount, cashed: false });
+      added++;
+    }
+  });
+  if (!added) { toast('⚠️ عمر ولو شيك واحد!'); return; }
+  save();
+  chkmRows = [];
+  c.innerHTML = '';
+  addChkmRow();
+  toast(`✅ تحفظو ${added} شيكات!`);
+  renderChikatM();
+  const bd = document.getElementById('bd-chikatm');
+  if (bd && !bd.classList.contains('col')) bd.style.maxHeight = bd.scrollHeight + 3000 + 'px';
+}
+
+function cashChkM(id) {
+  const c = db.chikatm.find(c => c.id === id);
+  if (c) { c.cashed = !c.cashed; save(); renderChikatM(); toast(c.cashed ? '✅ تصرف!' : '↩️ رجع'); }
+}
+
+function delChkM(id) {
+  db.chikatm = db.chikatm.filter(c => c.id !== id);
+  save(); renderChikatM(); toast('🗑');
+}
+
+function renderChikatM() {
+  if (!db.chikatm) db.chikatm = [];
+  const totalEl = document.getElementById('chkm-total');
+  const total = db.chikatm.filter(c => !c.cashed).reduce((a, c) => a + c.amount, 0);
+  if (totalEl) totalEl.textContent = total.toFixed(0) + ' د';
+  const el = document.getElementById('chikatm-list');
+  if (!el) return;
+  if (!db.chikatm.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">📥</div>لا توجد شيكات مأخوذة</div>';
+    return;
+  }
+  const now = new Date(); now.setHours(0,0,0,0);
+  const sorted = [...db.chikatm].sort((a, b) => {
+    if (a.cashed !== b.cashed) return a.cashed ? 1 : -1;
+    return a.date.localeCompare(b.date);
+  });
+  el.innerHTML = sorted.map(c => {
+    const due  = new Date(c.date); due.setHours(0,0,0,0);
+    const diff = Math.round((due - now) / 86400000);
+    const isUrgent = !c.cashed && diff >= 0 && diff <= 7;
+    const isLate   = !c.cashed && diff < 0;
+    let alertBadge = '';
+    if (isLate)        alertBadge = `<span class="bdg" style="background:rgba(231,76,60,0.15);color:var(--r)">🚨 تأخر ${Math.abs(diff)} يوم</span>`;
+    else if (isUrgent) alertBadge = `<span class="bdg" style="background:rgba(240,112,48,0.15);color:var(--o)">⚠️ باقي ${diff} يوم</span>`;
+    return `
+    <div class="li" style="${c.cashed ? 'opacity:0.45;' : isLate ? 'border:1px solid var(--r);border-radius:10px;' : isUrgent ? 'border:1px solid var(--o);border-radius:10px;' : ''}">
+      <div class="lico" style="background:${c.cashed ? 'var(--gd)' : isLate ? 'rgba(231,76,60,0.15)' : 'var(--gd)'}">${c.cashed ? '✅' : isLate ? '🚨' : '📥'}</div>
+      <div class="lin">
+        <div class="lnm" style="${c.cashed ? 'text-decoration:line-through;color:var(--mut)' : ''}">${c.name}</div>
+        <div class="lsb">📅 ${c.date} ${alertBadge ? '<br/>' + alertBadge : ''}</div>
+      </div>
+      <div class="lr">
+        <span class="lamt" style="color:${c.cashed ? 'var(--g)' : 'var(--g)'}">${c.amount} د</span>
+        <div style="display:flex;gap:4px;margin-top:2px;">
+          <button class="delbtn" style="background:${c.cashed ? 'var(--od)' : 'var(--gd)'};color:${c.cashed ? 'var(--o)' : 'var(--g)'};" onclick="cashChkM(${c.id})">${c.cashed ? '↩️' : '✓'}</button>
+          <button class="delbtn" onclick="delChkM(${c.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== SUBSCRIPTION =====
+let selectedSub = 'yearly';
+
+function showSubModal() {
+  document.getElementById('sub-modal').style.display = 'flex';
+  selectSub('yearly');
+}
+
+function selectSub(type) {
+  selectedSub = type;
+  document.getElementById('sub-monthly').style.borderColor = type === 'monthly' ? 'var(--g)' : 'var(--bdr)';
+  document.getElementById('sub-monthly').style.background  = type === 'monthly' ? 'rgba(12,186,126,0.08)' : 'transparent';
+  document.getElementById('sub-yearly').style.borderColor  = type === 'yearly'  ? 'var(--g)' : 'var(--bdr)';
+  document.getElementById('sub-yearly').style.background   = type === 'yearly'  ? 'rgba(12,186,126,0.08)' : 'transparent';
+}
+
+function confirmSub() {
+  const wa  = '212691707125';
+  const txt = selectedSub === 'monthly'
+    ? `السلام عليكم 👋\nبغيت نشترك فتطبيق تجارتي\n📅 *الاشتراك الشهري — 35 درهم*\nاسمي: ${merchant}`
+    : `السلام عليكم 👋\nبغيت نشترك فتطبيق تجارتي\n🗓️ *الاشتراك السنوي — 299 درهم*\nاسمي: ${merchant}`;
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(txt)}`, '_blank');
+  document.getElementById('sub-modal').style.display = 'none';
+}
+
+
+let cfg = JSON.parse(localStorage.getItem('tj_cfg') || '{"wa":"212691707125","paylink":""}');
+
+function saveCfg() { localStorage.setItem('tj_cfg', JSON.stringify(cfg)); }
+
+function loadSettings() {
+  document.getElementById('cfg-wa').value      = cfg.wa      || '';
+  document.getElementById('cfg-paylink').value = cfg.paylink || '';
+}
+
+function saveSettings() {
+  cfg.wa      = document.getElementById('cfg-wa').value.trim().replace(/\D/g,'');
+  cfg.paylink = document.getElementById('cfg-paylink').value.trim();
+  saveCfg();
+  toast('✅ تحفظات الإعدادات!');
+  showPage('pg-main');
+}
+
+function clearAllData() {
+  if (!confirm('⚠️ غادي تمسح كل البيانات. متأكد؟')) return;
+  db = { sales:[], stock:[], clients:[], expenses:[], incomes:[], debts:[], chikat:[], chikatm:[] };
+  save();
+  // مسح الترخيص كذلك
+  isLicensed = false;
+  isDemoMode = false;
+  localStorage.removeItem('tj_licensed');
+  localStorage.removeItem('tj_code');
+  renderAll();
+  toast('✅ مسحات كل البيانات!');
+  showPage('pg-main');
+}
+
+function changeMerchant() {
+  merchant = ''; localStorage.removeItem('tj_merchant');
+  showPage('pg-login');
+  document.getElementById('login-name').value = '';
+}
+
+// ===== PAYMENT =====
+let _fatora_client = '', _fatora_total = 0;
+
+function payWhatsApp() {
+  const wa = cfg.wa || '212691707125';
+  const msg = encodeURIComponent(`السلام عليكم 👋\nبغيت نسدد الفاتورة: *${_fatora_total} درهم*\n- ${_fatora_client||''}`);
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+}
+
+function clientPayWhatsApp() {
+  const wa  = cfg.wa || '212691707125';
+  const nm  = document.getElementById('cl-nm')?.textContent || '';
+  const debt = document.getElementById('cl-debt')?.textContent || '';
+  const msg = encodeURIComponent(`السلام عليكم 👋\nأنا ${nm} بغيت نسدد الدين: *${debt}*`);
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+}
+
+// ===== EXPORT / IMPORT =====
+function exportData() {
+  const data = { merchant, db, exported: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `tijanati_backup_${todayStr}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📤 تحفظ الملف!');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.db) { toast('⚠️ ملف خاطئ!'); return; }
+      if (!confirm('⚠️ غادي تبدل كل البيانات الحالية. واكد؟')) return;
+      db = data.db;
+      if (data.merchant) { merchant = data.merchant; localStorage.setItem('tj_merchant', merchant); }
+      if (!db.incomes)  db.incomes  = [];
+      if (!db.debts)    db.debts    = [];
+      if (!db.chikat)   db.chikat   = [];
+      if (!db.chikatm)  db.chikatm  = [];
+      save();
+      renderAll();
+      document.getElementById('tb-name').textContent = merchant;
+      toast('📥 استوردات البيانات!');
+    } catch { toast('⚠️ فشل الاستيراد!'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ===== INIT =====
+if (merchant) {
+  if (isLicensed) {
+    startApp();
+  } else {
+    document.getElementById('code-merchant-name').textContent = merchant;
+    showPage('pg-code');
+  }
+}
+document.getElementById('login-name').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('license-input')?.addEventListener('keydown', e => { if(e.key==='Enter') checkLicense(); });
+
+// ===== PWA =====
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwa-btn').style.display = 'flex';
+});
+
+function installPWA() {
+  if (!deferredPrompt) {
+    toast('📱 افتح التطبيق من Chrome وجرب مرة أخرى');
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    document.getElementById('pwa-btn').style.display = 'none';
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  toast('✅ تثبت التطبيق!');
+  document.getElementById('pwa-btn').style.display = 'none';
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBQNVlq2JeKHNKN8DyAA74wXLYGTQdadaU",
+  authDomain: "attijara-9bf48.firebaseapp.com",
+  databaseURL: "https://attijara-9bf48-default-rtdb.firebaseio.com",
+  projectId: "attijara-9bf48",
+  storageBucket: "attijara-9bf48.firebasestorage.app",
+  messagingSenderId: "562716281956",
+  appId: "1:562716281956:web:f5c6ec93cb90e2dbc4e371"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const fbDb  = getDatabase(fbApp);
+
+window.fbSave = function(merchant, db) {
+  if (!merchant) return;
+  const key = merchant.replace(/[^a-zA-Z0-9\u0600-\u06FF]/g, '_');
+  const data = { db: JSON.stringify(db), updated: Date.now() };
+  set(ref(fbDb, 'users/' + key), data)
+    .then(() => console.log('☁️ حفظ'))
+    .catch(e => console.log('⚠️', e));
+};
+
+window.fbLoad = function(merchant, callback) {
+  if (!merchant) return;
+  const key = merchant.replace(/[^a-zA-Z0-9\u0600-\u06FF]/g, '_');
+  onValue(ref(fbDb, 'users/' + key), (snap) => {
+    const data = snap.val();
+    if (data && data.db) callback(JSON.parse(data.db));
+  }, { onlyOnce: true });
+};
+
+window.fbCheckLicense = function(code, callback) {
+  get(ref(fbDb, 'licenses/' + code)).then(snap => {
+    const data = snap.val();
+    if (data) {
+      // علم الكود كمستعمل
+      set(ref(fbDb, 'licenses/' + code + '/used'), true);
+      callback(true);
+    } else {
+      callback(false);
+    }
+  }).catch(() => callback(false));
+};
+</script>
+</body>
+</html>
