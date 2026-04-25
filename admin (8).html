@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar-MA" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>تجارتي — لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0c1520;--sur:#131f2e;--card:#1a2840;--bdr:#1f3050;
+  --g:#0cba7e;--o:#f07030;--b:#3a8fef;--r:#e74c3c;--gold:#f5c842;
+  --w:#e8f0fe;--mut:#5a7a9a;
+}
+body{background:var(--bg);color:var(--w);font-family:'Cairo',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+#pg-admin-login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+.logo{font-size:28px;font-weight:900;color:var(--g);margin-bottom:6px;}
+.logo span{color:var(--o);}
+.sub{font-size:13px;color:var(--mut);margin-bottom:30px;}
+.inp{width:100%;max-width:320px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px;color:var(--w);font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;}
+.inp:focus{border-color:var(--g);}
+.btn-g{width:100%;max-width:320px;background:var(--g);color:#041a0e;border:none;border-radius:10px;padding:13px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;}
+
+/* MAIN */
+#pg-admin-main{display:none;padding:16px;max-width:500px;margin:0 auto;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:10px 0;border-bottom:1px solid var(--bdr);}
+.title{font-size:18px;font-weight:900;color:var(--g);}
+.logout-btn{background:transparent;border:1px solid var(--bdr);color:var(--mut);border-radius:8px;padding:5px 10px;font-family:'Cairo',sans-serif;font-size:11px;cursor:pointer;}
+
+.sec{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:14px;}
+.sec-title{font-size:13px;font-weight:800;color:var(--w);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bdr);}
+.field{margin-bottom:10px;}
+.field label{font-size:11px;color:var(--mut);display:block;margin-bottom:4px;}
+.fi{width:100%;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px;color:var(--w);font-family:'Cairo',sans-serif;font-size:13px;outline:none;}
+.fi:focus{border-color:var(--g);}
+.btn{width:100%;border:none;border-radius:10px;padding:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:6px;}
+.bg{background:var(--g);color:#041a0e;}
+.bw{background:#25D366;color:#fff;}
+.br{background:rgba(231,76,60,0.15);color:var(--r);border:1px solid var(--r);}
+
+/* CODE RESULT */
+.code-box{background:var(--card);border:2px solid var(--g);border-radius:10px;padding:14px;text-align:center;margin:10px 0;display:none;}
+.code-val{font-size:22px;font-weight:900;color:var(--g);letter-spacing:3px;margin-bottom:4px;}
+.code-name{font-size:12px;color:var(--mut);}
+
+/* CODES LIST */
+.code-item{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.code-item-info .ci-code{font-size:13px;font-weight:800;color:var(--g);letter-spacing:1px;}
+.code-item-info .ci-name{font-size:11px;color:var(--mut);}
+.code-item-info .ci-date{font-size:10px;color:var(--bdr);}
+.ci-used{font-size:10px;padding:3px 7px;border-radius:5px;font-weight:700;}
+.ci-used.yes{background:rgba(12,186,126,0.15);color:var(--g);}
+.ci-used.no{background:rgba(90,122,154,0.1);color:var(--mut);}
+.del-btn{background:transparent;border:none;color:var(--r);font-size:14px;cursor:pointer;padding:4px;}
+
+.empty{text-align:center;padding:20px;color:var(--mut);font-size:12px;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.stat-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:10px;text-align:center;}
+.stat-v{font-size:20px;font-weight:900;}
+.stat-l{font-size:10px;color:var(--mut);}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--sur);border:1px solid var(--bdr);color:var(--w);padding:10px 20px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="pg-admin-login">
+  <div class="logo">تجارتي <span>•</span></div>
+  <div class="sub">🔐 لوحة التحكم — المورد</div>
+  <input class="inp" id="admin-pass" type="password" placeholder="دخل الباسورد ديالك" />
+  <button class="btn-g" onclick="adminLogin()">دخول ←</button>
+  <div id="login-err" style="font-size:12px;color:var(--r);margin-top:8px;min-height:16px;"></div>
+</div>
+
+<!-- MAIN -->
+<div id="pg-admin-main">
+  <div class="topbar">
+    <div class="title">⚙️ لوحة التحكم</div>
+    <button class="logout-btn" onclick="adminLogout()">خروج ↩</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-v" style="color:var(--g)" id="st-total">0</div><div class="stat-l">كل الكودات</div></div>
+    <div class="stat-card"><div class="stat-v" style="color:var(--b)" id="st-used">0</div><div class="stat-l">مستعملة</div></div>
+    <div class="stat-card"><div class="stat-v" style="color:var(--o)" id="st-free">0</div><div class="stat-l">حرة</div></div>
+  </div>
+
+  <!-- ولد كود جديد -->
+  <div class="sec">
+    <div class="sec-title">➕ ولد كود جديد</div>
+    <div class="field"><label>اسم الزبون</label>
+      <input class="fi" id="new-client-name" type="text" placeholder="مثال: حسن البقال"/>
+    </div>
+    <div class="field"><label>رقم الهاتف (اختياري)</label>
+      <input class="fi" id="new-client-phone" type="tel" placeholder="06XXXXXXXX" inputmode="tel"/>
+    </div>
+    <div class="field">
+      <label>نوع الاشتراك</label>
+      <select class="fi" id="new-sub-type">
+        <option value="month">📅 شهري — 35 درهم</option>
+        <option value="year">🗓️ سنوي — 299 درهم</option>
+      </select>
+    </div>
+    <button class="btn bg" onclick="generateCode()">✨ ولد الكود</button>
+
+    <!-- نتيجة الكود -->
+    <div class="code-box" id="code-result-box">
+      <div class="code-name" id="res-name"></div>
+      <div class="code-val" id="res-code"></div>
+      <div class="code-name" style="margin-top:4px;" id="res-date"></div>
+    </div>
+    <button class="btn bw" id="btn-whatsapp" style="display:none;" onclick="sendWhatsApp()">💬 بعت على WhatsApp</button>
+    <button class="btn" id="btn-copy" style="display:none;background:var(--b);color:#fff;" onclick="copyCode()">📋 نسخ الكود</button>
+  </div>
+
+  <!-- قائمة الكودات -->
+  <div class="sec">
+    <div class="sec-title">📋 كل الكودات</div>
+    <div id="codes-list"><div class="empty">لا توجد كودات بعد</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBQNVlq2JeKHNKN8DyAA74wXLYGTQdadaU",
+  authDomain: "attijara-9bf48.firebaseapp.com",
+  databaseURL: "https://attijara-9bf48-default-rtdb.firebaseio.com",
+  projectId: "attijara-9bf48",
+  storageBucket: "attijara-9bf48.firebasestorage.app",
+  messagingSenderId: "562716281956",
+  appId: "1:562716281956:web:f5c6ec93cb90e2dbc4e371"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ===== باسورد المورد =====
+const ADMIN_PASS = 'tijanati2026'; // غير هاد الباسورد!
+
+let currentCode = '';
+let currentPhone = '';
+let codes = {};
+
+function toast(m) {
+  const t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== LOGIN =====
+window.adminLogin = function() {
+  const pass = document.getElementById('admin-pass').value;
+  if (pass === ADMIN_PASS) {
+    document.getElementById('pg-admin-login').style.display = 'none';
+    document.getElementById('pg-admin-main').style.display = 'block';
+    loadCodes();
+  } else {
+    document.getElementById('login-err').textContent = '❌ الباسورد غلط';
+    setTimeout(() => document.getElementById('login-err').textContent = '', 2000);
+  }
+};
+
+window.adminLogout = function() {
+  document.getElementById('pg-admin-login').style.display = 'flex';
+  document.getElementById('pg-admin-main').style.display = 'none';
+  document.getElementById('admin-pass').value = '';
+};
+
+document.getElementById('admin-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') window.adminLogin();
+});
+
+// ===== توليد كود =====
+function randCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  let s2 = '';
+  for (let i = 0; i < 4; i++) s2 += chars[Math.floor(Math.random() * chars.length)];
+  return `TIJ-${s}-${s2}`;
+}
+
+window.generateCode = function() {
+  const name  = document.getElementById('new-client-name').value.trim();
+  const phone = document.getElementById('new-client-phone').value.trim();
+  const subType = document.getElementById('new-sub-type').value;
+  if (!name) { toast('⚠️ دخل اسم الزبون!'); return; }
+
+  currentCode  = randCode();
+  currentPhone = phone;
+
+  // حساب تاريخ الانتهاء
+  const now = new Date();
+  const expiry = new Date(now);
+  if (subType === 'year') expiry.setFullYear(expiry.getFullYear() + 1);
+  else expiry.setMonth(expiry.getMonth() + 1);
+  const expiryStr = expiry.toISOString().split('T')[0];
+  const expiryDisplay = expiry.toLocaleDateString('ar-MA');
+
+  // حفظ فـ Firebase
+  const codeRef = ref(db, 'licenses/' + currentCode);
+  set(codeRef, {
+    name,
+    phone,
+    code: currentCode,
+    created: now.toLocaleDateString('ar-MA'),
+    subType,
+    expiry: expiryStr,
+    used: false
+  }).then(() => {
+    // عرض النتيجة
+    document.getElementById('res-name').textContent = '👤 ' + name;
+    document.getElementById('res-code').textContent = currentCode;
+    document.getElementById('res-date').textContent = '📅 ينتهي: ' + expiryDisplay;
+    document.getElementById('code-result-box').style.display = 'block';
+    document.getElementById('btn-whatsapp').style.display = 'block';
+    document.getElementById('btn-copy').style.display = 'block';
+    document.getElementById('new-client-name').value = '';
+    document.getElementById('new-client-phone').value = '';
+    toast('✅ تولد الكود!');
+    loadCodes();
+  }).catch(() => toast('⚠️ فشل الحفظ — تحقق من الإنترنت'));
+};
+
+window.sendWhatsApp = function() {
+  if (!currentPhone) { toast('⚠️ ماعندكش رقم هاتف'); return; }
+  const ph  = currentPhone.replace(/\D/g, '');
+  const msg = encodeURIComponent(
+    `السلام عليكم 👋\nهاهو كود تطبيق تجارتي ديالك:\n\n*${currentCode}*\n\nافتح الرابط:\nhttps://abdlhamidmoukafih-droid.github.io/tijarati/tijanati_v3.html\n\nودخل الكود باش تبدا 🚀`
+  );
+  window.open(`https://wa.me/${ph.startsWith('0') ? '212' + ph.slice(1) : ph}?text=${msg}`, '_blank');
+};
+
+window.copyCode = function() {
+  navigator.clipboard.writeText(currentCode).then(() => toast('📋 تنسخ الكود: ' + currentCode));
+};
+
+// ===== تحميل الكودات =====
+function loadCodes() {
+  const codesRef = ref(db, 'licenses');
+  get(codesRef).then(snap => {
+    codes = snap.val() || {};
+    renderCodes();
+  });
+}
+
+function renderCodes() {
+  const list = document.getElementById('codes-list');
+  const arr  = Object.values(codes);
+
+  document.getElementById('st-total').textContent = arr.length;
+  document.getElementById('st-used').textContent  = arr.filter(c => c.used).length;
+  document.getElementById('st-free').textContent  = arr.filter(c => !c.used).length;
+
+  if (!arr.length) {
+    list.innerHTML = '<div class="empty">لا توجد كودات بعد</div>';
+    return;
+  }
+
+  list.innerHTML = arr.reverse().map(c => {
+    const today = new Date().toISOString().split('T')[0];
+    const expired = c.expiry && c.expiry < today;
+    const daysLeft = c.expiry ? Math.ceil((new Date(c.expiry) - new Date()) / 86400000) : null;
+    const expiryInfo = c.expiry ? 
+      (expired ? `<div style="color:var(--r);font-size:11px;">⚠️ انتهى ${c.expiry}</div>` : 
+       daysLeft <= 5 ? `<div style="color:var(--o);font-size:11px;">⏰ باقي ${daysLeft} أيام</div>` :
+       `<div style="color:var(--mut);font-size:11px;">📅 ينتهي ${c.expiry}</div>`) : '';
+    return `
+    <div class="code-item" style="${expired ? 'border-color:var(--r);opacity:0.7;' : ''}">
+      <div class="code-item-info">
+        <div class="ci-code">${c.code}</div>
+        <div class="ci-name">👤 ${c.name} ${c.phone ? '• 📞 ' + c.phone : ''}</div>
+        <div class="ci-date">📅 ${c.created}</div>
+        ${expiryInfo}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="ci-used ${c.used ? 'yes' : 'no'}">${c.used ? '✅ مستعمل' : '⏳ حر'}</span>
+        <button class="del-btn" onclick="deleteCode('${c.code}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.deleteCode = function(code) {
+  if (!confirm(`حذف الكود ${code}؟`)) return;
+  remove(ref(db, 'licenses/' + code)).then(() => {
+    toast('🗑 تحذف الكود');
+    loadCodes();
+  });
+};
+</script>
+</body>
+</html>
