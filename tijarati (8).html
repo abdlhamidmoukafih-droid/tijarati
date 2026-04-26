@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="ar-MA" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>تيجاراتي</title>
+<meta name="theme-color" content="#0c1520"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="تيجاراتي"/>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0c1520;--sur:#131f2e;--card:#1a2840;--bdr:#1f3050;
+  --g:#0cba7e;--gd:rgba(12,186,126,0.12);
+  --o:#f07030;--od:rgba(240,112,48,0.12);
+  --b:#3a8fef;--r:#e74c3c;--gold:#f5c842;
+  --w:#e8f0fe;--mut:#5a7a9a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--w);font-family:'Cairo',sans-serif;min-height:100vh;}
+
+/* LANG MODAL */
+.lang-mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;align-items:center;justify-content:center;padding:20px;}
+.lang-mo.show{display:flex;}
+.lang-box{background:var(--sur);border-radius:20px;padding:24px 20px;width:100%;max-width:320px;border:1px solid var(--bdr);}
+.lang-title{font-size:18px;font-weight:800;margin-bottom:16px;text-align:center;}
+.lang-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--card);margin-bottom:10px;cursor:pointer;transition:.15s;}
+.lang-opt:active,.lang-opt.sel{border-color:var(--g);background:var(--gd);}
+.lang-flag{font-size:28px;}
+.lang-name{font-size:15px;font-weight:700;}
+.lang-native{font-size:12px;color:var(--mut);}
+
+/* PAGES */
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;flex-direction:column;}
+
+/* HEADER */
+.app-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(12,21,32,0.97);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bdr);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.header-logo{font-size:20px;font-weight:900;color:var(--g);}
+.header-sub{font-size:11px;color:var(--mut);}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;border:1.5px solid var(--bdr);
+  background:var(--card);color:var(--w);font-size:16px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+
+/* CONTENT */
+.content{flex:1;padding-bottom:140px;}
+
+/* STATS */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;}
+.stat-card{background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--bdr);}
+.stat-val{font-size:18px;font-weight:800;}
+.stat-lbl{font-size:11px;color:var(--mut);margin-top:2px;}
+
+/* SECTIONS */
+.section{margin:8px 12px;border-radius:14px;overflow:hidden;border:1px solid var(--bdr);}
+.sec-hdr{
+  padding:13px 16px;background:var(--card);
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.sec-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.sec-arr{transition:.3s;color:var(--mut);font-size:12px;}
+.section.open .sec-arr{transform:rotate(180deg);}
+.sec-body{display:none;background:var(--sur);padding:14px;}
+.section.open .sec-body{display:block;}
+
+/* FORMS */
+.fi{
+  width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--bdr);
+  background:var(--card);color:var(--w);font-family:'Cairo',sans-serif;font-size:14px;
+  text-align:right;outline:none;transition:.2s;
+}
+.fi:focus{border-color:var(--g);}
+.fi.sm{flex:1;min-width:70px;}
+.row{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+.btn{
+  padding:11px 16px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;transition:.15s;
+  white-space:nowrap;
+}
+.btn.g{background:var(--g);color:#fff;}
+.btn.g:active{opacity:.85;}
+.btn.s{background:var(--card);color:var(--mut);border:1.5px solid var(--bdr);}
+.btn.r{background:rgba(231,76,60,0.12);color:var(--r);border:1.5px solid var(--r);}
+.btn.full{width:100%;margin-top:8px;padding:13px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+.tbl th{padding:7px 5px;color:var(--mut);font-weight:600;border-bottom:1px solid var(--bdr);text-align:right;}
+.tbl td{padding:7px 5px;border-bottom:1px solid rgba(31,48,80,0.4);}
+.tbl tr:last-child td{border-bottom:none;}
+.xbtn{background:none;border:none;color:var(--r);cursor:pointer;font-size:14px;padding:2px 4px;}
+
+/* FATORA */
+.fat-row{display:flex;gap:6px;margin-bottom:8px;align-items:center;}
+.fat-row .fi{font-size:13px;padding:9px 11px;}
+.fat-nm{flex:2;}
+.del-r{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--r);
+  background:rgba(231,76,60,0.1);color:var(--r);cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.total-bar{
+  background:var(--card);border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;margin:10px 0;
+}
+.total-val{font-size:22px;font-weight:900;color:var(--g);}
+.fat-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* TAG */
+.tag{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:600;}
+.tg{background:var(--gd);color:var(--g);}
+.tr{background:rgba(231,76,60,0.12);color:var(--r);}
+.to{background:var(--od);color:var(--o);}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:160px;left:50%;transform:translateX(-50%);
+  background:rgba(12,186,126,0.95);color:#fff;padding:9px 18px;
+  border-radius:20px;font-size:13px;font-weight:700;
+  opacity:0;transition:.25s;pointer-events:none;z-index:999;white-space:nowrap;
+}
+#toast.show{opacity:1;}
+
+/* MODAL */
+.mo{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  z-index:300;align-items:flex-end;justify-content:center;
+}
+.mo.show{display:flex;}
+.mo-box{
+  background:var(--sur);border-radius:20px 20px 0 0;padding:24px 20px 40px;
+  width:100%;max-width:480px;border-top:1px solid var(--bdr);
+  max-height:90vh;overflow-y:auto;
+}
+.mo-title{font-size:18px;font-weight:800;margin-bottom:20px;text-align:center;}
+.mo-close{
+  position:absolute;top:14px;left:16px;
+  width:32px;height:32px;border-radius:50%;border:1.5px solid var(--bdr);
+  background:var(--card);color:var(--mut);font-size:18px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+
+/* SUB PLANS */
+.plan{
+  border:2px solid var(--bdr);border-radius:14px;padding:16px;
+  margin-bottom:10px;cursor:pointer;transition:.2s;text-align:center;position:relative;
+}
+.plan.sel,.plan:active{border-color:var(--g);background:var(--gd);}
+.plan-badge{
+  position:absolute;top:-10px;right:16px;
+  background:var(--o);color:#fff;font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:10px;
+}
+.plan-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.plan-price{font-size:28px;font-weight:900;color:var(--g);}
+.plan-save{font-size:12px;color:var(--o);margin-top:3px;}
+.plan-features{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.8;}
+
+/* SUBSCRIPTION BOTTOM BAR */
+.sub-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--sur);border-top:1px solid var(--bdr);
+  padding:10px 12px 20px;
+}
+.sub-bar-inner{
+  background:linear-gradient(135deg,rgba(12,186,126,0.15),rgba(58,143,239,0.1));
+  border:1px solid rgba(12,186,126,0.3);
+  border-radius:14px;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.sub-bar-text{font-size:13px;font-weight:700;}
+.sub-bar-sub{font-size:11px;color:var(--mut);margin-top:2px;}
+.sub-bar-btn{
+  background:var(--g);color:#fff;border:none;border-radius:10px;
+  padding:8px 14px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+  white-space:nowrap;
+}
+
+/* LICENSED BAR */
+.lic-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--sur);border-top:1px solid var(--bdr);
+  padding:8px 12px 20px;
+  display:flex;justify-content:space-around;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 12px;cursor:pointer;border-radius:10px;
+  font-size:10px;color:var(--mut);
+}
+.nav-btn.act{color:var(--g);}
+.nav-btn span{font-size:20px;}
+
+/* CODE PAGE */
+#pg-code{
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 20%, rgba(12,186,126,0.1) 0%, transparent 60%);
+  padding:30px 20px;
+}
+.code-wrap{width:100%;max-width:340px;text-align:center;}
+.code-icon{font-size:52px;margin-bottom:12px;}
+.code-ttl{font-size:22px;font-weight:900;margin-bottom:6px;}
+.code-sub{font-size:13px;color:var(--mut);margin-bottom:24px;line-height:1.6;}
+.code-err{color:var(--r);font-size:13px;margin-top:8px;min-height:18px;}
+
+/* SETTINGS PAGE */
+#pg-settings{padding:16px;padding-bottom:120px;}
+.set-ttl{font-size:20px;font-weight:800;margin-bottom:20px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<!-- MAIN PAGE -->
+<div id="pg-main" class="page active">
+  <div class="app-header">
+    <div>
+      <div class="header-logo">🏪 تيجاراتي</div>
+      <div class="header-sub" id="hdr-sub">مرحباً بك</div>
+    </div>
+    <div style="display:flex;gap:8px;position:relative;">
+      <div class="icon-btn" id="lang-btn" onclick="toggleLangMenu()">🇲🇦</div>
+      <div class="icon-btn" onclick="showPage('pg-settings')">⚙️</div>
+      <!-- Lang menu -->
+      <div id="lang-menu" style="display:none;position:absolute;top:44px;right:44px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;z-index:200;min-width:140px;">
+        <div onclick="setLang('ar')" style="padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;">🇲🇦 العربية</div>
+        <div onclick="setLang('fr')" style="padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;border-top:1px solid var(--bdr);">🇫🇷 Français</div>
+        <div onclick="setLang('en')" style="padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;border-top:1px solid var(--bdr);">🇬🇧 English</div>
+        <div onclick="setLang('es')" style="padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;border-top:1px solid var(--bdr);">🇪🇸 Español</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-val" id="stat-income" style="color:var(--g)">0</div>
+        <div class="stat-lbl" id="lbl-income">المدخول</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-expense" style="color:var(--r)">0</div>
+        <div class="stat-lbl" id="lbl-expense">المصاريف</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-debt" style="color:var(--o)">0</div>
+        <div class="stat-lbl" id="lbl-debt">الديون</div>
+      </div>
+    </div>
+
+    <!-- FATORA -->
+    <div class="section open" id="sec-fatora">
+      <div class="sec-hdr" onclick="toggleSec('sec-fatora')">
+        <div class="sec-title" id="sec-fat-title">🧾 الفاتورة</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <!-- اسم الزبون -->
+        <div class="row" style="margin-bottom:12px;">
+          <input class="fi" id="fat-client" type="text" placeholder="اسم الزبون"/>
+        </div>
+
+        <!-- headers الفاتورة -->
+        <div id="fat-hdr" style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto;gap:4px;margin-bottom:4px;padding:0 2px;">
+          <div style="font-size:11px;color:var(--mut);font-weight:700;">المنتج</div>
+          <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">الوحدة</div>
+          <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">الكمية</div>
+          <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">السعر</div>
+          <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">المجموع</div>
+          <div></div>
+        </div>
+
+        <!-- صفوف الفاتورة -->
+        <div id="fat-rows"></div>
+
+        <button class="btn s full" id="btn-add-row" onclick="addFatRow()" style="margin-bottom:12px;font-size:13px;">+ زيد منتج</button>
+
+        <!-- المجموع الكلي -->
+        <div class="total-bar">
+          <div style="font-size:13px;color:var(--mut);" id="lbl-total">المجموع الكلي</div>
+          <div class="total-val"><span id="fat-total">0</span> <small style="font-size:12px;color:var(--mut);" id="lbl-dh">درهم</small></div>
+        </div>
+
+        <!-- أزرار -->
+        <div class="fat-btns">
+          <button class="btn g" id="btn-save-fat" onclick="saveSale()">💾 حفظ</button>
+          <button class="btn s" id="btn-wa-fat" onclick="fatWa()">💬 واتساب</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+          <button class="btn s" onclick="printFatora()" style="font-size:13px;">🖨️ طباعة</button>
+          <button class="btn r" id="btn-clear-fat" onclick="clearFat()" style="font-size:13px;">🗑 امسح</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INCOME -->
+    <div class="section" id="sec-income">
+      <div class="sec-hdr" onclick="toggleSec('sec-income')">
+        <div class="sec-title" id="sec-inc-title">📈 المدخول</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="inc-d" type="text" placeholder="الوصف"/>
+          <input class="fi sm" id="inc-a" type="number" placeholder="درهم"/>
+          <button class="btn g" onclick="addInc()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>الوصف</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="inc-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="section" id="sec-exp">
+      <div class="sec-hdr" onclick="toggleSec('sec-exp')">
+        <div class="sec-title" id="sec-exp-title">📉 المصاريف</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="exp-d" type="text" placeholder="الوصف"/>
+          <input class="fi sm" id="exp-a" type="number" placeholder="درهم"/>
+          <button class="btn g" onclick="addExp()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>الوصف</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="exp-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="section" id="sec-stk">
+      <div class="sec-hdr" onclick="toggleSec('sec-stk')">
+        <div class="sec-title" id="sec-stk-title">📦 المخزون</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="stk-n" type="text" placeholder="المنتج"/>
+          <input class="fi sm" id="stk-q" type="number" placeholder="الكمية"/>
+          <input class="fi sm" id="stk-p" type="number" placeholder="السعر"/>
+          <button class="btn g" onclick="addStk()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th></th></tr></thead>
+        <tbody id="stk-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="section" id="sec-cli">
+      <div class="sec-hdr" onclick="toggleSec('sec-cli')">
+        <div class="sec-title" id="sec-cli-title">👥 العملاء</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="cli-n" type="text" placeholder="الاسم"/>
+          <input class="fi sm" id="cli-p" type="tel" placeholder="الهاتف"/>
+          <button class="btn g" onclick="addCli()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>الاسم</th><th>الهاتف</th><th>الديون</th><th></th></tr></thead>
+        <tbody id="cli-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- DEBTS -->
+    <div class="section" id="sec-dbt">
+      <div class="sec-hdr" onclick="toggleSec('sec-dbt')">
+        <div class="sec-title" id="sec-dbt-title">⏳ الديون</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="dbt-n" type="text" placeholder="اسم الزبون"/>
+          <input class="fi sm" id="dbt-a" type="number" placeholder="درهم"/>
+          <button class="btn g" onclick="addDbt()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>الاسم</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="dbt-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CHIKAT GIVEN -->
+    <div class="section" id="sec-chk">
+      <div class="sec-hdr" onclick="toggleSec('sec-chk')">
+        <div class="sec-title" id="sec-chk-title">🧾 الشيكات المعطاة</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="chk-n" type="text" placeholder="لمن"/>
+          <input class="fi sm" id="chk-a" type="number" placeholder="درهم"/>
+          <input class="fi sm" id="chk-d" type="date"/>
+          <button class="btn g" onclick="addChk()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>لمن</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="chk-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CHIKAT RECEIVED -->
+    <div class="section" id="sec-chkm">
+      <div class="sec-hdr" onclick="toggleSec('sec-chkm')">
+        <div class="sec-title" id="sec-chkm-title">📥 الشيكات المأخوذة</div>
+        <div class="sec-arr">▼</div>
+      </div>
+      <div class="sec-body">
+        <div class="row">
+          <input class="fi" id="chkm-n" type="text" placeholder="من عند من"/>
+          <input class="fi sm" id="chkm-a" type="number" placeholder="درهم"/>
+          <input class="fi sm" id="chkm-d" type="date"/>
+          <button class="btn g" onclick="addChkM()">+</button>
+        </div>
+        <table class="tbl"><thead><tr><th>من عند</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead>
+        <tbody id="chkm-list"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR — unlicensed -->
+  <div class="sub-bar" id="sub-bar">
+    <div class="sub-bar-inner" onclick="showSubModal()">
+      <div>
+        <div class="sub-bar-text" id="sub-bar-txt">🔐 فعّل التطبيق</div>
+        <div class="sub-bar-sub" id="sub-bar-sub">من 35 درهم/شهر — احفظ بياناتك</div>
+      </div>
+      <button class="sub-bar-btn" id="sub-bar-btn-txt">اشترك دابا</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <span style="font-size:12px;color:var(--mut);">عندك كود؟ </span>
+      <span style="font-size:12px;color:var(--g);cursor:pointer;font-weight:700;" onclick="showPage('pg-code')">🔑 دخلو هنا</span>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV — licensed -->
+  <div class="lic-bar" id="lic-bar" style="display:none;">
+    <div class="nav-btn act" onclick="showPage('pg-main')"><span>🏠</span><span id="nav-home">الرئيسية</span></div>
+    <div class="nav-btn" onclick="showPage('pg-settings')"><span>⚙️</span><span id="nav-sett">الإعدادات</span></div>
+    <div class="nav-btn" onclick="showSubModal()"><span>💎</span><span id="nav-renew">تجديد</span></div>
+  </div>
+</div>
+
+<!-- CODE PAGE -->
+<div id="pg-code" class="page">
+  <div class="code-wrap">
+    <div class="code-icon">🔑</div>
+    <div class="code-ttl" id="code-ttl">دخل كود الاشتراك</div>
+    <div class="code-sub" id="code-sub-txt">عندك كود؟ دخلو هنا باش تفعل التطبيق</div>
+    <input class="fi" id="code-inp" type="text" placeholder="TIJ-XXXX-XXXX" style="text-align:center;letter-spacing:2px;font-size:16px;"/>
+    <button class="btn g full" id="btn-check-code" onclick="checkCode()">✓ تحقق من الكود</button>
+    <div class="code-err" id="code-err"></div>
+    <button class="btn s full" id="btn-back-code" onclick="showPage('pg-main')" style="margin-top:8px;">← رجوع</button>
+  </div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div id="pg-settings" class="page">
+  <div style="padding:16px;padding-bottom:140px;flex:1;">
+    <button class="btn s" onclick="showPage('pg-main')" style="margin-bottom:16px;" id="btn-back-sett">← رجوع</button>
+    <div class="set-ttl" id="set-ttl">⚙️ الإعدادات</div>
+    <div class="field">
+      <label id="lbl-shopname">اسم المحل</label>
+      <input class="fi" id="cfg-name" type="text" placeholder="اسم محلك"/>
+    </div>
+    <div class="field">
+      <label id="lbl-wanum">رقم WhatsApp</label>
+      <input class="fi" id="cfg-wa" type="tel" placeholder="212XXXXXXXXX"/>
+    </div>
+    <div class="field">
+      <label id="lbl-paylink">رابط الدفع (اختياري)</label>
+      <input class="fi" id="cfg-paylink" type="url" placeholder="https://..."/>
+    </div>
+    <button class="btn g full" id="btn-save-sett" onclick="saveSettings()">💾 حفظ</button>
+    <div style="margin-top:24px;border-top:1px solid var(--bdr);padding-top:20px;">
+      <button class="btn s full" id="btn-export" onclick="exportData()" style="margin-bottom:8px;">📤 تصدير البيانات</button>
+      <label class="btn s full" style="display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:8px;">
+        <span id="btn-import">📥 استيراد البيانات</span>
+        <input type="file" accept=".json" onchange="importData(event)" style="display:none;"/>
+      </label>
+      <button class="btn r full" id="btn-clear-all" onclick="clearAll()">🗑 مسح كل البيانات</button>
+    </div>
+  </div>
+  <div class="sub-bar" id="sub-bar-settings">
+    <div class="sub-bar-inner" onclick="showSubModal()">
+      <div>
+        <div class="sub-bar-text" id="sub-bar-txt2">🔐 فعّل التطبيق</div>
+        <div class="sub-bar-sub" id="sub-bar-sub2">من 35 درهم/شهر</div>
+      </div>
+      <button class="sub-bar-btn" id="sub-bar-btn-txt2">اشترك دابا</button>
+    </div>
+  </div>
+  <div class="lic-bar" id="lic-bar-settings" style="display:none;">
+    <div class="nav-btn" onclick="showPage('pg-main')"><span>🏠</span>الرئيسية</div>
+    <div class="nav-btn act" onclick="showPage('pg-settings')"><span>⚙️</span>الإعدادات</div>
+    <div class="nav-btn" onclick="showSubModal()"><span>💎</span>تجديد</div>
+  </div>
+</div>
+
+<!-- SUB MODAL -->
+<div class="mo" id="sub-mo">
+  <div class="mo-box" style="position:relative;">
+    <div class="mo-close" onclick="closeMo('sub-mo')">✕</div>
+    <div class="mo-title" id="sub-mo-title">💎 اختار الاشتراك</div>
+    <div class="plan sel" id="plan-m" onclick="selPlan('m')">
+      <div class="plan-name" id="plan-m-name">📅 شهري</div>
+      <div class="plan-price">35 <small style="font-size:14px;" id="dh-m">درهم</small></div>
+      <div class="plan-features" id="plan-m-feat">✓ كل الميزات<br>✓ حفظ فالسحاب<br>✓ 5 أجهزة</div>
+    </div>
+    <div class="plan" id="plan-y" onclick="selPlan('y')">
+      <div class="plan-badge" id="plan-y-badge">⭐ الأوفر</div>
+      <div class="plan-name" id="plan-y-name">🗓️ سنوي</div>
+      <div class="plan-price">299 <small style="font-size:14px;" id="dh-y">درهم</small></div>
+      <div class="plan-save" id="plan-y-save">توفر 121 درهم</div>
+      <div class="plan-features" id="plan-y-feat">✓ كل الميزات<br>✓ حفظ فالسحاب<br>✓ 5 أجهزة</div>
+    </div>
+    <button class="btn g full" id="btn-confirm-sub" onclick="confirmSub()">💬 تواصل للاشتراك</button>
+    <div style="margin-top:12px;text-align:center;">
+      <span style="font-size:12px;color:var(--mut);" id="have-code-txt">عندك كود؟ </span>
+      <span style="font-size:12px;color:var(--g);cursor:pointer;" id="enter-here-txt" onclick="closeMo('sub-mo');showPage('pg-code');">دخلو هنا</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const app = initializeApp({
+  apiKey:"AIzaSyBQNVlq2JeKHNKN8DyAA74wXLYGTQdadaU",
+  authDomain:"attijara-9bf48.firebaseapp.com",
+  databaseURL:"https://attijara-9bf48-default-rtdb.firebaseio.com",
+  projectId:"attijara-9bf48",
+  storageBucket:"attijara-9bf48.appspot.com",
+  messagingSenderId:"562716281956",
+  appId:"1:562716281956:web:f5c6ec93cb90e2dbc4e371"
+});
+const fbDb = getDatabase(app);
+
+window.fbSave = (key, data) => set(ref(fbDb,'merchants/'+key), data).catch(()=>{});
+window.fbLoad = (key, cb) => get(ref(fbDb,'merchants/'+key)).then(s=>{ if(s.val()) cb(s.val()); }).catch(()=>{});
+window.fbCheckLicense = (code, cb) => {
+  get(ref(fbDb,'licenses/'+code)).then(s=>{
+    const d = s.val();
+    if(!d){ cb(false,'invalid'); return; }
+    if(d.expiry){
+      const today = new Date().toISOString().split('T')[0];
+      if(d.expiry < today){ cb(false,'expired'); return; }
+      localStorage.setItem('tj_expiry', d.expiry);
+    }
+    set(ref(fbDb,'licenses/'+code+'/used'), true);
+    cb(true);
+  }).catch(()=>cb(false,'offline'));
+};
+window.fbCheckExpiry = () => {
+  const code = localStorage.getItem('tj_code');
+  if(!code) return;
+  get(ref(fbDb,'licenses/'+code)).then(s=>{
+    const d = s.val();
+    if(d&&d.expiry){
+      const today = new Date().toISOString().split('T')[0];
+      if(d.expiry < today){
+        localStorage.removeItem('tj_licensed');
+        localStorage.removeItem('tj_code');
+        localStorage.removeItem('tj_expiry');
+        alert('⚠️ انتهت صلاحية اشتراكك — جدد الاشتراك');
+        location.reload();
+      } else {
+        const days = Math.ceil((new Date(d.expiry)-new Date())/86400000);
+        if(days<=5) toast(`⚠️ اشتراكك ينتهي بعد ${days} أيام`,'rgba(240,112,48,0.95)');
+      }
+    }
+  }).catch(()=>{});
+};
+</script>
+
+<script>
+// STATE
+let isLicensed = localStorage.getItem('tj_licensed')==='1';
+let selectedPlan = 'm';
+let fatRows = [];
+let db = {sales:[],stock:[],clients:[],expenses:[],incomes:[],debts:[],chikat:[],chikatm:[]};
+function fixDb(d){
+  ['sales','stock','clients','expenses','incomes','debts','chikat','chikatm'].forEach(k=>{ if(!Array.isArray(d[k])) d[k]=[]; });
+  return d;
+}
+let cfg = {name:'', wa:'212691707125', paylink:''};
+
+// LOAD
+function loadLocal(){
+  try{ db = fixDb(JSON.parse(localStorage.getItem('tj_db'))||db); }catch(e){}
+  try{ cfg = JSON.parse(localStorage.getItem('tj_cfg'))||cfg; }catch(e){}
+}
+
+// SAVE
+function save(){
+  if(!isLicensed) return;
+  localStorage.setItem('tj_db', JSON.stringify(db));
+  const key = (cfg.name||'user').replace(/[^a-zA-Z0-9\u0600-\u06FF]/g,'_');
+  if(window.fbSave) window.fbSave(key, db);
+}
+
+// INIT
+function init(){
+  loadLocal();
+  updateBottomBar();
+  if(cfg.name) document.getElementById('hdr-sub').textContent = '👤 '+cfg.name;
+  if(isLicensed && window.fbLoad){
+    const key = (cfg.name||'user').replace(/[^a-zA-Z0-9\u0600-\u06FF]/g,'_');
+    window.fbLoad(key, remote=>{ db=fixDb(remote); renderAll(); });
+    setTimeout(()=>{ if(window.fbCheckExpiry) window.fbCheckExpiry(); }, 2000);
+  }
+  loadSettings();
+  addFatRow();
+  renderAll();
+  setLang(currentLang);
+}
+
+function updateBottomBar(){
+  ['sub-bar','sub-bar-settings'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = isLicensed?'none':'block';
+  });
+  ['lic-bar','lic-bar-settings'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = isLicensed?'flex':'none';
+  });
+}
+
+// PAGES
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById(id);
+  if(pg){ pg.classList.add('active'); window.scrollTo(0,0); }
+}
+
+function toggleSec(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+// TOAST
+function toast(msg, color){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color||'rgba(12,186,126,0.95)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// DATE
+function td(){ return new Date().toLocaleDateString('ar-MA'); }
+
+// FATORA
+function addFatRow(){
+  fatRows.push({name:'',unit:'',qty:1,price:0});
+  renderFat();
+}
+function rmFatRow(i){ fatRows.splice(i,1); renderFat(); }
+function updFat(i,f,v){ fatRows[i][f]=f==='name'||f==='unit'?v:parseFloat(v)||0; calcFat(); }
+function calcFat(){
+  const t = fatRows.reduce((s,r)=>s+(r.qty||0)*(r.price||0),0);
+  document.getElementById('fat-total').textContent = t.toFixed(0);
+  return t;
+}
+function renderFat(){
+  const t = T();
+  const units_ar = ['','كيلوغرام','غرام','لتر','مليلتر','متر','سنتيمتر','قطعة','علبة','كيس','كرتون','دزينة','طن'];
+  const units_fr = ['','Kilogramme','Gramme','Litre','Millilitre','Mètre','Centimètre','Pièce','Boîte','Sachet','Carton','Douzaine','Tonne'];
+  const units_en = ['','Kilogram','Gram','Liter','Milliliter','Meter','Centimeter','Piece','Box','Bag','Carton','Dozen','Ton'];
+  const units_es = ['','Kilogramo','Gramo','Litro','Mililitro','Metro','Centímetro','Pieza','Caja','Bolsa','Cartón','Docena','Tonelada'];
+  const units_vals = ['','كغ','غ','ل','مل','م','سم','قطعة','علبة','كيس','كرتون','دزينة','طن'];
+  const unitLabels = currentLang==='fr'?units_fr:currentLang==='en'?units_en:currentLang==='es'?units_es:units_ar;
+
+  // Update headers
+  const hdr = document.getElementById('fat-hdr');
+  if(hdr) hdr.innerHTML = `
+    <div style="font-size:11px;color:var(--mut);font-weight:700;">${t.product}</div>
+    <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">${currentLang==='ar'?'الوحدة':currentLang==='fr'?'Unité':'Unit'}</div>
+    <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">${t.qty}</div>
+    <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">${t.price}</div>
+    <div style="font-size:11px;color:var(--mut);font-weight:700;text-align:center;">${t.total}</div>
+    <div></div>
+  `;
+
+  document.getElementById('fat-rows').innerHTML = fatRows.map((r,i)=>`
+    <div style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr auto;gap:4px;margin-bottom:6px;align-items:center;">
+      <input class="fi" value="${r.name||''}" placeholder="${t.product}" oninput="updFat(${i},'name',this.value)" style="font-size:12px;padding:8px 10px;"/>
+      <select class="fi" onchange="updFat(${i},'unit',this.value)" style="font-size:11px;padding:8px 4px;">
+        ${units_vals.map((v,j)=>`<option value="${v}" ${r.unit===v?'selected':''}>${unitLabels[j]||'—'}</option>`).join('')}
+      </select>
+      <input class="fi" type="number" value="${r.qty||''}" placeholder="1" oninput="updFat(${i},'qty',this.value)" style="font-size:12px;padding:8px 6px;text-align:center;"/>
+      <input class="fi" type="number" value="${r.price||''}" placeholder="0" oninput="updFat(${i},'price',this.value)" style="font-size:12px;padding:8px 6px;text-align:center;"/>
+      <div style="background:var(--card);border:1.5px solid var(--g);border-radius:10px;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;color:var(--g);">${((r.qty||0)*(r.price||0)).toFixed(0)}</div>
+      <button class="del-r" onclick="rmFatRow(${i})">✕</button>
+    </div>
+  `).join('');
+  calcFat();
+}
+function printFatora(){
+  const t = T();
+  const client = document.getElementById('fat-client').value || '—';
+  const total = calcFat();
+  const date = new Date().toLocaleDateString(currentLang==='ar'?'ar-MA':'fr-FR');
+  const unitLabel = currentLang==='ar'?'الوحدة':currentLang==='fr'?'Unité':'Unit';
+  const rows = fatRows.filter(r=>r.name).map(r=>`
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #eee;">${r.name}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${r.unit||'—'}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${r.qty}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${r.price}</td>
+      <td style="padding:8px;border-bottom:1px solid #eee;text-align:center;font-weight:bold;color:#0cba7e;">${(r.qty*r.price).toFixed(0)}</td>
+    </tr>
+  `).join('');
+  const isRtl = currentLang==='ar';
+  const win = window.open('','_blank');
+  win.document.write(`
+    <!DOCTYPE html><html dir="${isRtl?'rtl':'ltr'}" lang="${currentLang}">
+    <head><meta charset="UTF-8"><title>${t.invoice}</title>
+    <style>
+      body{font-family:Arial,sans-serif;padding:20px;max-width:420px;margin:0 auto;}
+      h2{text-align:center;color:#0cba7e;margin-bottom:4px;}
+      .info{text-align:center;color:#666;font-size:13px;margin-bottom:20px;}
+      table{width:100%;border-collapse:collapse;font-size:13px;}
+      th{background:#0cba7e;color:#fff;padding:10px 8px;text-align:center;}
+      .total-row{text-align:${isRtl?'left':'right'};margin-top:16px;font-size:16px;font-weight:bold;border-top:2px solid #0cba7e;padding-top:10px;}
+      .total-row span{color:#0cba7e;font-size:20px;}
+      @media print{body{padding:5px;}}
+    </style></head>
+    <body>
+      <h2>🏪 ${t.appName}</h2>
+      <div class="info">👤 ${client} &nbsp;|&nbsp; 📅 ${date}</div>
+      <table>
+        <thead><tr>
+          <th>${t.product}</th>
+          <th>${unitLabel}</th>
+          <th>${t.qty}</th>
+          <th>${t.price}</th>
+          <th>${t.total}</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="total-row">${t.total}: <span>${total} ${t.dh}</span></div>
+      <script>window.onload=()=>window.print();<\/script>
+    </body></html>
+  `);
+  win.document.close();
+}
+function clearFat(){ fatRows=[]; document.getElementById('fat-client').value=''; addFatRow(); }
+function saveSale(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const client = document.getElementById('fat-client').value.trim()||'—';
+  const total = calcFat();
+  if(!fatRows.length||!total){ toast(t.addProductMsg,'rgba(240,112,48,0.95)'); return; }
+  db.sales.unshift({client,items:[...fatRows],total,date:td()});
+  fatRows.forEach(r=>{ const s=db.stock.find(x=>x.name===r.name); if(s) s.qty=Math.max(0,s.qty-r.qty); });
+  db.incomes.unshift({desc:t.invoice.replace('🧾 ','')+': '+client,amount:total,date:td()});
+  save(); renderAll(); toast(t.savedMsg); clearFat();
+}
+function fatWa(){
+  const t = T();
+  const total = calcFat();
+  const client = document.getElementById('fat-client').value||'—';
+  const msg = encodeURIComponent(`${t.msgInvoice} ${client}: ${total} ${t.dh}\n${t.msgThanks}`);
+  window.open(`https://wa.me/${cfg.wa}?text=${msg}`,'_blank');
+}
+
+// INCOME
+function addInc(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const d=document.getElementById('inc-d').value.trim(), a=parseFloat(document.getElementById('inc-a').value)||0;
+  if(!d||!a){ toast(t.fillMsg,'rgba(240,112,48,0.95)'); return; }
+  db.incomes.unshift({desc:d,amount:a,date:td()});
+  document.getElementById('inc-d').value=''; document.getElementById('inc-a').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+
+// EXPENSE
+function addExp(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const d=document.getElementById('exp-d').value.trim(), a=parseFloat(document.getElementById('exp-a').value)||0;
+  if(!d||!a){ toast(t.fillMsg,'rgba(240,112,48,0.95)'); return; }
+  db.expenses.unshift({desc:d,amount:a,date:td()});
+  document.getElementById('exp-d').value=''; document.getElementById('exp-a').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+
+// STOCK
+function addStk(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const n=document.getElementById('stk-n').value.trim(), q=parseFloat(document.getElementById('stk-q').value)||0, p=parseFloat(document.getElementById('stk-p').value)||0;
+  if(!n){ toast(t.enterProductMsg,'rgba(240,112,48,0.95)'); return; }
+  const ex=db.stock.find(s=>s.name===n);
+  if(ex) ex.qty+=q; else db.stock.unshift({name:n,qty:q,price:p});
+  document.getElementById('stk-n').value=''; document.getElementById('stk-q').value=''; document.getElementById('stk-p').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+
+// CLIENTS
+function addCli(){
+  if(!isLicensed){ showSubModal(); return; }
+  const n=document.getElementById('cli-n').value.trim(), p=document.getElementById('cli-p').value.trim();
+  if(!n){ toast(T().enterNameMsg,'rgba(240,112,48,0.95)'); return; }
+  db.clients.unshift({name:n,phone:p,debt:0});
+  document.getElementById('cli-n').value=''; document.getElementById('cli-p').value='';
+  save(); renderAll(); toast(T().doneMsg);
+}
+
+// DEBTS
+function addDbt(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const n=document.getElementById('dbt-n').value.trim(), a=parseFloat(document.getElementById('dbt-a').value)||0;
+  if(!n||!a){ toast(t.fillMsg,'rgba(240,112,48,0.95)'); return; }
+  db.debts.unshift({name:n,amount:a,date:td(),paid:false});
+  document.getElementById('dbt-n').value=''; document.getElementById('dbt-a').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+
+function payDbt(i){
+  if(!isLicensed){ showSubModal(); return; }
+  db.debts[i].paid=true; save(); renderAll(); toast(T().paidMsg);
+}
+
+// CHIKAT
+function addChk(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const n=document.getElementById('chk-n').value.trim(), a=parseFloat(document.getElementById('chk-a').value)||0, d=document.getElementById('chk-d').value;
+  if(!n||!a){ toast(t.fillMsg,'rgba(240,112,48,0.95)'); return; }
+  db.chikat.unshift({name:n,amount:a,date:d});
+  document.getElementById('chk-n').value=''; document.getElementById('chk-a').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+function addChkM(){
+  const t = T();
+  if(!isLicensed){ showSubModal(); return; }
+  const n=document.getElementById('chkm-n').value.trim(), a=parseFloat(document.getElementById('chkm-a').value)||0, d=document.getElementById('chkm-d').value;
+  if(!n||!a){ toast(t.fillMsg,'rgba(240,112,48,0.95)'); return; }
+  db.chikatm.unshift({name:n,amount:a,date:d});
+  document.getElementById('chkm-n').value=''; document.getElementById('chkm-a').value='';
+  save(); renderAll(); toast(t.doneMsg);
+}
+
+// DELETE
+function del(arr,i){
+  if(!isLicensed){ showSubModal(); return; }
+  if(confirm(T().deleteConfirm)){ db[arr].splice(i,1); save(); renderAll(); }
+}
+
+// RENDER
+function renderAll(){
+  const t = T();
+  const totalInc = db.incomes.reduce((s,r)=>s+r.amount,0);
+  const totalExp = db.expenses.reduce((s,r)=>s+r.amount,0);
+  const totalDbt = db.debts.filter(d=>!d.paid).reduce((s,r)=>s+r.amount,0);
+  document.getElementById('stat-income').textContent = totalInc.toFixed(0);
+  document.getElementById('stat-expense').textContent = totalExp.toFixed(0);
+  document.getElementById('stat-debt').textContent = totalDbt.toFixed(0);
+  document.getElementById('lbl-income').textContent = t.income;
+  document.getElementById('lbl-expense').textContent = t.expense;
+  document.getElementById('lbl-debt').textContent = t.debt;
+
+  document.getElementById('inc-list').innerHTML = db.incomes.slice(0,20).map((r,i)=>`
+    <tr><td>${r.desc}</td><td style="color:var(--g)">${r.amount}${t.dh}</td>
+    <td style="color:var(--mut);font-size:11px">${r.date}</td>
+    <td><button class="xbtn" onclick="del('incomes',${i})">✕</button></td></tr>`).join('');
+
+  document.getElementById('exp-list').innerHTML = db.expenses.slice(0,20).map((r,i)=>`
+    <tr><td>${r.desc}</td><td style="color:var(--r)">${r.amount}${t.dh}</td>
+    <td style="color:var(--mut);font-size:11px">${r.date}</td>
+    <td><button class="xbtn" onclick="del('expenses',${i})">✕</button></td></tr>`).join('');
+
+  document.getElementById('stk-list').innerHTML = db.stock.map((r,i)=>`
+    <tr><td>${r.name}</td>
+    <td><span class="tag ${r.qty<=2?'tr':r.qty<=5?'to':'tg'}">${r.qty}</span></td>
+    <td style="color:var(--b)">${r.price}${t.dh}</td>
+    <td><button class="xbtn" onclick="del('stock',${i})">✕</button></td></tr>`).join('');
+
+  document.getElementById('cli-list').innerHTML = db.clients.map((r,i)=>`
+    <tr><td>${r.name}</td><td style="color:var(--b)">${r.phone||'—'}</td>
+    <td><span class="tag ${r.debt>0?'tr':'tg'}">${r.debt||0}${t.dh}</span></td>
+    <td><button class="xbtn" onclick="del('clients',${i})">✕</button></td></tr>`).join('');
+
+  document.getElementById('dbt-list').innerHTML = db.debts.map((r,i)=>`
+    <tr style="${r.paid?'opacity:.4':''}">
+      <td>${r.name}</td><td style="color:var(--o)">${r.amount}${t.dh}</td>
+      <td style="color:var(--mut);font-size:11px">${r.date}</td>
+      <td style="display:flex;gap:3px;">
+        ${!r.paid?`<button onclick="payDbt(${i})" style="background:var(--gd);border:1px solid var(--g);color:var(--g);border-radius:5px;padding:1px 5px;cursor:pointer;font-size:11px;">${t.pay}</button>`:''}
+        <button class="xbtn" onclick="del('debts',${i})">✕</button>
+      </td></tr>`).join('');
+
+  document.getElementById('chk-list').innerHTML = db.chikat.map((r,i)=>`
+    <tr><td>${r.name}</td><td style="color:var(--o)">${r.amount}${t.dh}</td>
+    <td style="color:var(--mut);font-size:11px">${r.date}</td>
+    <td><button class="xbtn" onclick="del('chikat',${i})">✕</button></td></tr>`).join('');
+
+  document.getElementById('chkm-list').innerHTML = db.chikatm.map((r,i)=>`
+    <tr><td>${r.name}</td><td style="color:var(--g)">${r.amount}${t.dh}</td>
+    <td style="color:var(--mut);font-size:11px">${r.date}</td>
+    <td><button class="xbtn" onclick="del('chikatm',${i})">✕</button></td></tr>`).join('');
+
+  // Update section titles
+  document.getElementById('sec-fat-title').textContent = t.invoice;
+  document.getElementById('sec-inc-title').textContent = t.incomeS;
+  document.getElementById('sec-exp-title').textContent = t.expenseS;
+  document.getElementById('sec-stk-title').textContent = t.stock;
+  document.getElementById('sec-cli-title').textContent = t.clients;
+  document.getElementById('sec-dbt-title').textContent = t.debts;
+  document.getElementById('sec-chk-title').textContent = t.chikat;
+  document.getElementById('sec-chkm-title').textContent = t.chikatm;
+
+  // Update sub bar
+  document.getElementById('sub-bar-text').textContent = t.subscribe;
+  document.getElementById('sub-bar-sub').textContent = t.subSub;
+  document.getElementById('sub-bar-btn').textContent = t.subBtn;
+  ['sub-bar-text2','sub-bar-sub2','sub-bar-btn2'].forEach((id,idx)=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = [t.subscribe,t.subSub,t.subBtn][idx];
+  });
+}
+
+// SUB MODAL
+function showSubModal(){ document.getElementById('sub-mo').classList.add('show'); selPlan('m'); }
+function closeMo(id){ document.getElementById(id).classList.remove('show'); }
+function selPlan(p){
+  selectedPlan=p;
+  document.getElementById('plan-m').classList.toggle('sel',p==='m');
+  document.getElementById('plan-y').classList.toggle('sel',p==='y');
+}
+function confirmSub(){
+  const t = T();
+  const price = selectedPlan==='y' ? t.yearly_price : t.monthly_price;
+  const period = selectedPlan==='y' ? t.subYearly : t.subMonthly;
+  const msg = encodeURIComponent(`${t.msgSub}\n📅 ${period} — ${price} ${t.dh}\n🏪 ${cfg.name||'—'}`);
+  window.open(`https://wa.me/${cfg.wa}?text=${msg}`,'_blank');
+  closeMo('sub-mo');
+}
+
+// CODE
+function checkCode(){
+  const t = T();
+  const code=document.getElementById('code-inp').value.trim().toUpperCase();
+  const err=document.getElementById('code-err');
+  if(!code){ err.textContent=t.enterCodeMsg; return; }
+  err.textContent=t.checkingMsg;
+  if(window.fbCheckLicense){
+    window.fbCheckLicense(code,(valid,reason)=>{
+      if(valid){
+        isLicensed=true;
+        localStorage.setItem('tj_licensed','1');
+        localStorage.setItem('tj_code',code);
+        updateBottomBar();
+        err.textContent='';
+        toast(t.activatedMsg);
+        showPage('pg-main');
+      } else {
+        err.textContent = reason==='expired'?t.expiredMsg:reason==='offline'?t.offlineMsg:t.wrongCodeMsg;
+      }
+    });
+  } else {
+    setTimeout(()=>err.textContent=t.offlineMsg,1000);
+  }
+}
+
+// SETTINGS
+function loadSettings(){
+  document.getElementById('cfg-name').value=cfg.name||'';
+  document.getElementById('cfg-wa').value=cfg.wa||'';
+  document.getElementById('cfg-paylink').value=cfg.paylink||'';
+}
+function saveSettings(){
+  const t = T();
+  cfg.name=document.getElementById('cfg-name').value.trim();
+  cfg.wa=document.getElementById('cfg-wa').value.trim()||'212691707125';
+  cfg.paylink=document.getElementById('cfg-paylink').value.trim();
+  localStorage.setItem('tj_cfg',JSON.stringify(cfg));
+  if(cfg.name) document.getElementById('hdr-sub').textContent='👤 '+cfg.name;
+  toast(t.savedSettMsg);
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({db,cfg},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`tijarati_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+function importData(e){
+  const t = T();
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{ try{ const d=JSON.parse(ev.target.result); if(d.db){db=d.db;save();renderAll();toast(t.importedMsg);}} catch{toast(t.invalidFileMsg,'rgba(231,76,60,0.95)');} };
+  r.readAsText(f);
+}
+function clearAll(){
+  const t = T();
+  if(!confirm(t.clearConfirm)) return;
+  db={sales:[],stock:[],clients:[],expenses:[],incomes:[],debts:[],chikat:[],chikatm:[]};
+  isLicensed=false;
+  ['tj_licensed','tj_code','tj_expiry','tj_db'].forEach(k=>localStorage.removeItem(k));
+  updateBottomBar(); renderAll();
+  toast(t.clearedMsg);
+  showPage('pg-main');
+}
+
+// TRANSLATIONS
+const LANGS = {
+  ar: {
+    dir:'rtl', appName:'تيجاراتي',
+    income:'المدخول', expense:'المصاريف', debt:'الديون',
+    invoice:'🧾 الفاتورة', incomeS:'📈 المدخول', expenseS:'📉 المصاريف',
+    stock:'📦 المخزون', clients:'👥 العملاء', debts:'⏳ الديون',
+    chikat:'🧾 الشيكات المعطاة', chikatm:'📥 الشيكات المأخوذة',
+    client:'اسم الزبون (اختياري)', product:'المنتج', qty:'الكمية', price:'السعر',
+    addProduct:'+ زيد منتج', total:'المجموع', save:'💾 حفظ', whatsapp:'💬 واتساب', clear:'🗑 امسح',
+    desc:'الوصف', amount:'درهم', add:'+',
+    prodName:'المنتج', clientName:'الاسم', phone:'الهاتف', date:'التاريخ',
+    to:'لمن', from:'من عند من', debts2:'الديون',
+    subscribe:'🔐 فعّل التطبيق', subSub:'من 35 درهم/شهر — احفظ بياناتك', subBtn:'اشترك دابا',
+    settings:'⚙️ الإعدادات', shopName:'اسم المحل', waNum:'رقم WhatsApp', payLink:'رابط الدفع (اختياري)',
+    saveSett:'💾 حفظ', export:'📤 تصدير البيانات', import:'📥 استيراد البيانات', clearAll:'🗑 مسح كل البيانات',
+    chooseSubTitle:'💎 اختار الاشتراك', monthly:'📅 شهري', yearly:'🗓️ سنوي', save121:'توفر 121 درهم',
+    features:'✓ كل الميزات\n✓ حفظ فالسحاب\n✓ 5 أجهزة', contactSub:'💬 تواصل للاشتراك',
+    haveCode:'عندك كود؟', enterHere:'دخلو هنا',
+    codeTitle:'دخل كود الاشتراك', codeSub:'عندك كود؟ دخلو هنا باش تفعل التطبيق',
+    codePlaceholder:'TIJ-XXXX-XXXX', checkCode:'✓ تحقق من الكود', back:'← رجوع',
+    home:'الرئيسية', renew:'تجديد',
+    confirmDelete:'حذف؟', paid:'✅ مدفوع', pay:'✓',
+    msgInvoice:'السلام عليكم 👋\nفاتورة', msgThanks:'شكراً 🙏',
+    msgSub:'كنبغي نشترك في تيجاراتي',
+    dh:'د', monthly_price:'35', yearly_price:'299',
+    best:'⭐ الأوفر',
+    activatedMsg:'✅ تم التفعيل! مرحباً بك 🎉',
+    savedMsg:'✅ تم حفظ الفاتورة!',
+    savedSettMsg:'✅ تم حفظ الإعدادات!',
+    clearedMsg:'✅ مسحات كل البيانات!',
+    importedMsg:'✅ تم الاستيراد!',
+    doneMsg:'✅ تم!',
+    paidMsg:'✅ تم التسديد!',
+    fillMsg:'⚠️ كمل المعلومات',
+    addProductMsg:'⚠️ زيد منتج وسعر',
+    enterProductMsg:'⚠️ دخل اسم المنتج',
+    enterNameMsg:'⚠️ دخل الاسم',
+    enterCodeMsg:'⚠️ دخل الكود',
+    checkingMsg:'⏳ جاري التحقق...',
+    expiredMsg:'⏰ الكود منتهي',
+    offlineMsg:'📵 تحقق من الإنترنت',
+    wrongCodeMsg:'❌ الكود غلط',
+    invalidFileMsg:'❌ ملف غير صالح',
+    clearConfirm:'⚠️ غادي تمسح كل البيانات. متأكد؟',
+    deleteConfirm:'حذف؟',
+    expiryAlert:'⚠️ انتهت صلاحية اشتراكك — جدد الاشتراك',
+    daysLeft:'اشتراكك ينتهي بعد',days2:'أيام',
+    subMonthly:'شهري', subYearly:'سنوي',
+  },
+  fr: {
+    dir:'ltr', appName:'Tijarati',
+    income:'Recettes', expense:'Dépenses', debt:'Dettes',
+    invoice:'🧾 Facture', incomeS:'📈 Recettes', expenseS:'📉 Dépenses',
+    stock:'📦 Stock', clients:'👥 Clients', debts:'⏳ Dettes',
+    chikat:'🧾 Chèques émis', chikatm:'📥 Chèques reçus',
+    client:'Nom du client (optionnel)', product:'Produit', qty:'Qté', price:'Prix',
+    addProduct:'+ Ajouter', total:'Total', save:'💾 Sauvegarder', whatsapp:'💬 WhatsApp', clear:'🗑 Effacer',
+    desc:'Description', amount:'MAD', add:'+',
+    prodName:'Produit', clientName:'Nom', phone:'Téléphone', date:'Date',
+    to:'À qui', from:'De qui', debts2:'Dettes',
+    subscribe:'🔐 Activer l\'app', subSub:'Dès 35 DH/mois — Sauvegardez vos données', subBtn:'S\'abonner',
+    settings:'⚙️ Paramètres', shopName:'Nom du magasin', waNum:'Numéro WhatsApp', payLink:'Lien de paiement (optionnel)',
+    saveSett:'💾 Sauvegarder', export:'📤 Exporter', import:'📥 Importer', clearAll:'🗑 Effacer tout',
+    chooseSubTitle:'💎 Choisir un abonnement', monthly:'📅 Mensuel', yearly:'🗓️ Annuel', save121:'Économisez 121 DH',
+    features:'✓ Toutes les fonctions\n✓ Sauvegarde cloud\n✓ 5 appareils', contactSub:'💬 Contacter pour s\'abonner',
+    haveCode:'Vous avez un code?', enterHere:'Entrez ici',
+    codeTitle:'Entrer le code', codeSub:'Avez-vous un code? Entrez-le ici pour activer',
+    codePlaceholder:'TIJ-XXXX-XXXX', checkCode:'✓ Vérifier', back:'← Retour',
+    home:'Accueil', renew:'Renouveler',
+    confirmDelete:'Supprimer?', paid:'✅ Payé', pay:'✓',
+    msgInvoice:'Bonjour 👋\nFacture', msgThanks:'Merci 🙏',
+    msgSub:'Je voudrais m\'abonner à Tijarati',
+    dh:'DH', monthly_price:'35', yearly_price:'299',
+    best:'⭐ Meilleur choix',
+    activatedMsg:'✅ Activé! Bienvenue 🎉',
+    savedMsg:'✅ Facture sauvegardée!',
+    savedSettMsg:'✅ Paramètres sauvegardés!',
+    clearedMsg:'✅ Données effacées!',
+    importedMsg:'✅ Importé!',
+    doneMsg:'✅ Fait!',
+    paidMsg:'✅ Payé!',
+    fillMsg:'⚠️ Complétez les informations',
+    addProductMsg:'⚠️ Ajoutez un produit et un prix',
+    enterProductMsg:'⚠️ Entrez le nom du produit',
+    enterNameMsg:'⚠️ Entrez le nom',
+    enterCodeMsg:'⚠️ Entrez le code',
+    checkingMsg:'⏳ Vérification...',
+    expiredMsg:'⏰ Code expiré',
+    offlineMsg:'📵 Vérifiez votre connexion',
+    wrongCodeMsg:'❌ Code incorrect',
+    invalidFileMsg:'❌ Fichier invalide',
+    clearConfirm:'⚠️ Effacer toutes les données?',
+    deleteConfirm:'Supprimer?',
+    expiryAlert:'⚠️ Votre abonnement a expiré — Renouvelez',
+    daysLeft:'Votre abonnement expire dans',days2:'jours',
+    subMonthly:'Mensuel', subYearly:'Annuel',
+  },
+  en: {
+    dir:'ltr', appName:'Tijarati',
+    income:'Revenue', expense:'Expenses', debt:'Debts',
+    invoice:'🧾 Invoice', incomeS:'📈 Revenue', expenseS:'📉 Expenses',
+    stock:'📦 Stock', clients:'👥 Clients', debts:'⏳ Debts',
+    chikat:'🧾 Issued Checks', chikatm:'📥 Received Checks',
+    client:'Client name (optional)', product:'Product', qty:'Qty', price:'Price',
+    addProduct:'+ Add product', total:'Total', save:'💾 Save', whatsapp:'💬 WhatsApp', clear:'🗑 Clear',
+    desc:'Description', amount:'MAD', add:'+',
+    prodName:'Product', clientName:'Name', phone:'Phone', date:'Date',
+    to:'To', from:'From', debts2:'Debts',
+    subscribe:'🔐 Activate App', subSub:'From 35 MAD/month — Save your data', subBtn:'Subscribe Now',
+    settings:'⚙️ Settings', shopName:'Shop name', waNum:'WhatsApp number', payLink:'Payment link (optional)',
+    saveSett:'💾 Save', export:'📤 Export Data', import:'📥 Import Data', clearAll:'🗑 Clear All Data',
+    chooseSubTitle:'💎 Choose Plan', monthly:'📅 Monthly', yearly:'🗓️ Yearly', save121:'Save 121 MAD',
+    features:'✓ All features\n✓ Cloud backup\n✓ 5 devices', contactSub:'💬 Contact to Subscribe',
+    haveCode:'Have a code?', enterHere:'Enter here',
+    codeTitle:'Enter Activation Code', codeSub:'Have a code? Enter it here to activate the app',
+    codePlaceholder:'TIJ-XXXX-XXXX', checkCode:'✓ Verify Code', back:'← Back',
+    home:'Home', renew:'Renew',
+    confirmDelete:'Delete?', paid:'✅ Paid', pay:'✓',
+    msgInvoice:'Hello 👋\nInvoice for', msgThanks:'Thank you 🙏',
+    msgSub:'I would like to subscribe to Tijarati',
+    dh:'MAD', monthly_price:'35', yearly_price:'299',
+    best:'⭐ Best Value',
+    activatedMsg:'✅ Activated! Welcome 🎉',
+    savedMsg:'✅ Invoice saved!',
+    savedSettMsg:'✅ Settings saved!',
+    clearedMsg:'✅ All data cleared!',
+    importedMsg:'✅ Imported!',
+    doneMsg:'✅ Done!',
+    paidMsg:'✅ Paid!',
+    fillMsg:'⚠️ Please fill all fields',
+    addProductMsg:'⚠️ Add a product and price',
+    enterProductMsg:'⚠️ Enter product name',
+    enterNameMsg:'⚠️ Enter name',
+    enterCodeMsg:'⚠️ Enter code',
+    checkingMsg:'⏳ Checking...',
+    expiredMsg:'⏰ Code expired',
+    offlineMsg:'📵 Check your internet',
+    wrongCodeMsg:'❌ Wrong code',
+    invalidFileMsg:'❌ Invalid file',
+    clearConfirm:'⚠️ Delete all data?',
+    deleteConfirm:'Delete?',
+    expiryAlert:'⚠️ Your subscription expired — Please renew',
+    daysLeft:'Subscription expires in',days2:'days',
+    subMonthly:'Monthly', subYearly:'Yearly',
+  },
+  es: {
+    dir:'ltr', appName:'Tijarati',
+    income:'Ingresos', expense:'Gastos', debt:'Deudas',
+    invoice:'🧾 Factura', incomeS:'📈 Ingresos', expenseS:'📉 Gastos',
+    stock:'📦 Inventario', clients:'👥 Clientes', debts:'⏳ Deudas',
+    chikat:'🧾 Cheques emitidos', chikatm:'📥 Cheques recibidos',
+    client:'Nombre del cliente (opcional)', product:'Producto', qty:'Cant', price:'Precio',
+    addProduct:'+ Agregar', total:'Total', save:'💾 Guardar', whatsapp:'💬 WhatsApp', clear:'🗑 Limpiar',
+    desc:'Descripción', amount:'MAD', add:'+',
+    prodName:'Producto', clientName:'Nombre', phone:'Teléfono', date:'Fecha',
+    to:'Para', from:'De', debts2:'Deudas',
+    subscribe:'🔐 Activar App', subSub:'Desde 35 MAD/mes — Guarda tus datos', subBtn:'Suscribirse',
+    settings:'⚙️ Ajustes', shopName:'Nombre del negocio', waNum:'Número WhatsApp', payLink:'Enlace de pago (opcional)',
+    saveSett:'💾 Guardar', export:'📤 Exportar datos', import:'📥 Importar datos', clearAll:'🗑 Borrar todo',
+    chooseSubTitle:'💎 Elige Plan', monthly:'📅 Mensual', yearly:'🗓️ Anual', save121:'Ahorra 121 MAD',
+    features:'✓ Todas las funciones\n✓ Copia en la nube\n✓ 5 dispositivos', contactSub:'💬 Contactar para suscribirse',
+    haveCode:'¿Tienes código?', enterHere:'Ingrésalo aquí',
+    codeTitle:'Ingresar código', codeSub:'¿Tienes un código? Ingrésalo aquí para activar',
+    codePlaceholder:'TIJ-XXXX-XXXX', checkCode:'✓ Verificar', back:'← Volver',
+    home:'Inicio', renew:'Renovar',
+    confirmDelete:'¿Eliminar?', paid:'✅ Pagado', pay:'✓',
+    msgInvoice:'Hola 👋\nFactura', msgThanks:'Gracias 🙏',
+    msgSub:'Me gustaría suscribirme a Tijarati',
+    dh:'MAD', monthly_price:'35', yearly_price:'299',
+    best:'⭐ Mejor valor',
+    activatedMsg:'✅ ¡Activado! Bienvenido 🎉',
+    savedMsg:'✅ ¡Factura guardada!',
+    savedSettMsg:'✅ ¡Ajustes guardados!',
+    clearedMsg:'✅ ¡Datos borrados!',
+    importedMsg:'✅ ¡Importado!',
+    doneMsg:'✅ ¡Hecho!',
+    paidMsg:'✅ ¡Pagado!',
+    fillMsg:'⚠️ Complete la información',
+    addProductMsg:'⚠️ Agregue producto y precio',
+    enterProductMsg:'⚠️ Ingrese nombre del producto',
+    enterNameMsg:'⚠️ Ingrese el nombre',
+    enterCodeMsg:'⚠️ Ingrese el código',
+    checkingMsg:'⏳ Verificando...',
+    expiredMsg:'⏰ Código expirado',
+    offlineMsg:'📵 Verifique su conexión',
+    wrongCodeMsg:'❌ Código incorrecto',
+    invalidFileMsg:'❌ Archivo inválido',
+    clearConfirm:'⚠️ ¿Borrar todos los datos?',
+    deleteConfirm:'¿Eliminar?',
+    expiryAlert:'⚠️ Tu suscripción expiró — Renueva',
+    daysLeft:'La suscripción vence en',days2:'días',
+    subMonthly:'Mensual', subYearly:'Anual',
+  }
+};
+
+let currentLang = localStorage.getItem('tj_lang') || 'ar';
+function T(){ return LANGS[currentLang]; }
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('tj_lang', lang);
+  const t = T();
+
+  // dir & lang
+  document.documentElement.dir = t.dir;
+  document.documentElement.lang = lang;
+
+  // flag button
+  const flags = {ar:'🇲🇦',fr:'🇫🇷',en:'🇬🇧',es:'🇪🇸'};
+  const langBtn = document.getElementById('lang-btn');
+  if(langBtn) langBtn.textContent = flags[lang];
+
+  // close lang menu
+  const langMenu = document.getElementById('lang-menu');
+  if(langMenu) langMenu.style.display='none';
+
+  // stats labels
+  setText('lbl-income', t.income);
+  setText('lbl-expense', t.expense);
+  setText('lbl-debt', t.debt);
+
+  // section titles
+  setText('sec-fat-title', t.invoice);
+  setText('sec-inc-title', t.incomeS);
+  setText('sec-exp-title', t.expenseS);
+  setText('sec-stk-title', t.stock);
+  setText('sec-cli-title', t.clients);
+  setText('sec-dbt-title', t.debts);
+  setText('sec-chk-title', t.chikat);
+  setText('sec-chkm-title', t.chikatm);
+
+  // fatora
+  setPlaceholder('fat-client', t.client);
+  setText('btn-add-row', '+ '+t.addProduct.replace('+ ',''));
+  setText('lbl-total', t.total);
+  setText('btn-save-fat', t.save);
+  setText('btn-wa-fat', t.whatsapp);
+  setText('btn-clear-fat', t.clear);
+
+  // income
+  setPlaceholder('inc-d', t.desc);
+  setPlaceholder('inc-a', t.amount);
+
+  // expense
+  setPlaceholder('exp-d', t.desc);
+  setPlaceholder('exp-a', t.amount);
+
+  // stock
+  setPlaceholder('stk-n', t.product);
+  setPlaceholder('stk-q', t.qty);
+  setPlaceholder('stk-p', t.price);
+
+  // clients
+  setPlaceholder('cli-n', t.clientName);
+  setPlaceholder('cli-p', t.phone);
+
+  // debts
+  setPlaceholder('dbt-n', t.clientName);
+  setPlaceholder('dbt-a', t.amount);
+
+  // chikat
+  setPlaceholder('chk-n', t.to);
+  setPlaceholder('chk-a', t.amount);
+  setPlaceholder('chkm-n', t.from);
+  setPlaceholder('chkm-a', t.amount);
+
+  // sub bar
+  setText('sub-bar-txt', t.subscribe);
+  setText('sub-bar-sub', t.subSub);
+  setText('sub-bar-btn-txt', t.subBtn);
+  setText('sub-bar-txt2', t.subscribe);
+  setText('sub-bar-sub2', t.subSub);
+  setText('sub-bar-btn-txt2', t.subBtn);
+
+  // sub modal
+  setText('sub-mo-title', t.chooseSubTitle);
+  setText('plan-m-name', t.monthly);
+  setText('plan-y-name', t.yearly);
+  setText('plan-y-save', t.save121);
+  setText('btn-confirm-sub', t.contactSub);
+  setText('have-code-txt', t.haveCode);
+  setText('enter-here-txt', t.enterHere);
+
+  // code page
+  setText('code-ttl', t.codeTitle);
+  setText('code-sub-txt', t.codeSub);
+  setPlaceholder('code-inp', t.codePlaceholder);
+  setText('btn-check-code', t.checkCode);
+  setText('btn-back-code', t.back);
+
+  // settings
+  setText('set-ttl', t.settings);
+  setPlaceholder('cfg-name', t.shopName);
+  setPlaceholder('cfg-wa', t.waNum);
+  setPlaceholder('cfg-paylink', t.payLink);
+  setText('btn-save-sett', t.saveSett);
+  setText('btn-export', t.export);
+  setText('btn-import', t.import);
+  setText('btn-clear-all', t.clearAll);
+
+  // header welcome
+  const hdrSub = document.getElementById('hdr-sub');
+  if(hdrSub && !cfg.name) hdrSub.textContent = lang==='ar'?'مرحباً بك':lang==='fr'?'Bienvenue':lang==='en'?'Welcome':'Bienvenido';
+
+  renderAll();
+}
+
+function setText(id, val){
+  const el = document.getElementById(id);
+  if(el && val!==undefined) el.textContent = val;
+}
+function setPlaceholder(id, val){
+  const el = document.getElementById(id);
+  if(el && val!==undefined) el.placeholder = val;
+}
+
+function toggleLangMenu(){
+  const m = document.getElementById('lang-menu');
+  m.style.display = m.style.display==='block'?'none':'block';
+}
+
+// START
+setLang(currentLang);
+init();
+</script>
+</body>
+</html>
