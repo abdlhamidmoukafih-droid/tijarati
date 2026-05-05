@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — محل تجارتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f0f2f5;--white:#fff;--dark:#1a1a2e;
+  --g:#00b894;--gd:rgba(0,184,148,0.12);
+  --gold:#f9a825;--goldd:rgba(249,168,37,0.15);
+  --b:#0984e3;--r:#e17055;--text:#2d3436;--mut:#636e72;
+  --bdr:#e0e0e0;--shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+#pg-login{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:20px;
+}
+.login-box{
+  background:var(--white);border-radius:20px;padding:32px 24px;
+  width:100%;max-width:360px;box-shadow:var(--shadow);text-align:center;
+}
+.login-logo{font-size:48px;margin-bottom:10px;}
+.login-title{font-size:22px;font-weight:900;color:var(--dark);margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--mut);margin-bottom:24px;}
+.fi{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1.5px solid var(--bdr);background:#fff;
+  color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;
+  text-align:right;outline:none;transition:.2s;margin-bottom:12px;
+}
+.fi:focus{border-color:var(--g);}
+.btn{
+  width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;transition:.2s;
+}
+.btn-g{background:var(--g);color:#fff;}
+.btn-r{background:rgba(225,112,85,0.1);color:var(--r);border:1.5px solid var(--r);}
+.btn-b{background:rgba(9,132,227,0.1);color:var(--b);border:1.5px solid var(--b);}
+.login-err{color:var(--r);font-size:13px;margin-top:8px;}
+
+/* MAIN */
+#pg-main{display:none;}
+.header{
+  background:var(--dark);color:#fff;padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.header-title{font-size:18px;font-weight:800;}
+.header-title span{color:var(--gold);}
+.logout-btn{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;
+}
+
+/* STATS */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  padding:16px;
+}
+.stat-card{
+  background:var(--white);border-radius:14px;padding:14px;
+  text-align:center;box-shadow:var(--shadow);
+}
+.stat-val{font-size:24px;font-weight:900;}
+.stat-lbl{font-size:11px;color:var(--mut);margin-top:2px;}
+
+/* TABS */
+.tabs{
+  display:flex;border-bottom:2px solid var(--bdr);
+  background:var(--white);margin-bottom:16px;
+  position:sticky;top:56px;z-index:40;
+}
+.tab{
+  flex:1;padding:12px;text-align:center;font-size:13px;font-weight:700;
+  color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;
+  transition:.2s;margin-bottom:-2px;
+}
+.tab.active{color:var(--g);border-bottom-color:var(--g);}
+
+/* ORDERS */
+.orders{padding:0 12px 100px;}
+.order-card{
+  background:var(--white);border-radius:16px;padding:16px;
+  margin-bottom:12px;box-shadow:var(--shadow);
+  border-right:4px solid var(--bdr);
+}
+.order-card.pending{border-right-color:var(--gold);}
+.order-card.done{border-right-color:var(--g);}
+.order-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.order-name{font-size:15px;font-weight:800;}
+.order-pack{
+  padding:3px 10px;border-radius:8px;font-size:11px;font-weight:700;
+}
+.pack-basic{background:rgba(9,132,227,0.1);color:var(--b);}
+.pack-standard{background:var(--gd);color:var(--g);}
+.pack-premium{background:var(--goldd);color:var(--gold);}
+.order-info{font-size:12px;color:var(--mut);line-height:1.8;margin-bottom:12px;}
+.order-info span{color:var(--text);font-weight:600;}
+.order-btns{display:flex;gap:8px;}
+.obtn{
+  flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+}
+.obtn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;}
+.obtn-code{background:var(--gd);color:var(--g);border:1.5px solid var(--g);}
+.obtn-del{background:rgba(225,112,85,0.1);color:var(--r);border:1.5px solid var(--r);}
+
+/* ADD ORDER */
+.add-section{padding:16px 12px 100px;}
+.form-card{
+  background:var(--white);border-radius:16px;padding:16px;
+  margin-bottom:14px;box-shadow:var(--shadow);
+}
+.form-title{font-size:15px;font-weight:800;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600;}
+
+/* CODE MODAL */
+.mo{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  z-index:200;align-items:flex-end;justify-content:center;
+}
+.mo.show{display:flex;}
+.mo-box{
+  background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 40px;
+  width:100%;max-width:480px;
+}
+.mo-title{font-size:18px;font-weight:800;margin-bottom:16px;text-align:center;}
+.code-display{
+  background:var(--dark);border-radius:14px;padding:16px;
+  text-align:center;margin-bottom:16px;
+}
+.code-val{font-size:28px;font-weight:900;color:var(--gold);letter-spacing:4px;}
+.code-sub{font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px;}
+.mo-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mo-btn{
+  padding:12px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;
+}
+.mo-btn-g{background:var(--g);color:#fff;}
+.mo-btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;}
+.mo-btn-s{background:var(--bg);color:var(--mut);border:1.5px solid var(--bdr);}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--g);color:#fff;padding:10px 20px;
+  border-radius:20px;font-size:13px;font-weight:700;
+  opacity:0;transition:.25s;pointer-events:none;z-index:999;white-space:nowrap;
+}
+#toast.show{opacity:1;}
+
+.empty{text-align:center;padding:40px 20px;color:var(--mut);font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="pg-login">
+  <div class="login-box">
+    <div class="login-logo">🏪</div>
+    <div class="login-title">Admin</div>
+    <div class="login-sub">محل تجارتك — لوحة التحكم</div>
+    <input class="fi" id="pass-inp" type="password" placeholder="كلمة السر"/>
+    <button class="btn btn-g" onclick="doLogin()">دخول</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="pg-main">
+  <div class="header">
+    <div class="header-title">محل <span>تجارتك</span> — Admin</div>
+    <div class="logout-btn" onclick="doLogout()">خروج</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-val" id="stat-total" style="color:var(--b)">0</div>
+      <div class="stat-lbl">كل الطلبات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stat-pending" style="color:var(--gold)">0</div>
+      <div class="stat-lbl">في الانتظار</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="stat-done" style="color:var(--g)">0</div>
+      <div class="stat-lbl">مكتملة</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('pending')">⏳ في الانتظار</div>
+    <div class="tab" onclick="switchTab('done')">✅ مكتملة</div>
+    <div class="tab" onclick="switchTab('add')">➕ طلب جديد</div>
+  </div>
+
+  <!-- Orders pending -->
+  <div id="tab-pending" class="orders"></div>
+
+  <!-- Orders done -->
+  <div id="tab-done" class="orders" style="display:none;"></div>
+
+  <!-- Add order -->
+  <div id="tab-add" class="add-section" style="display:none;">
+    <div class="form-card">
+      <div class="form-title">➕ إضافة طلب جديد</div>
+      <div class="field">
+        <label>اسم المحل *</label>
+        <input class="fi" id="n-shop" type="text" placeholder="اسم المحل"/>
+      </div>
+      <div class="field">
+        <label>رقم واتساب *</label>
+        <input class="fi" id="n-wa" type="tel" placeholder="212XXXXXXXXX"/>
+      </div>
+      <div class="field">
+        <label>Gmail *</label>
+        <input class="fi" id="n-gmail" type="email" placeholder="exemple@gmail.com"/>
+      </div>
+      <div class="field">
+        <label>الباقة</label>
+        <select class="fi" id="n-pack">
+          <option value="basic">🥉 باسيك — 300 درهم</option>
+          <option value="standard">🥈 ستاندار — 600 درهم</option>
+          <option value="premium">🥇 بريميوم — 1000 درهم</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>نوع التجارة</label>
+        <input class="fi" id="n-type" type="text" placeholder="إلكترونيات، ملابس..."/>
+      </div>
+      <div class="field">
+        <label>ملاحظات</label>
+        <textarea class="fi" id="n-notes" rows="3" placeholder="ملاحظات..."></textarea>
+      </div>
+      <button class="btn btn-g" onclick="addOrder()">💾 حفظ الطلب</button>
+    </div>
+  </div>
+</div>
+
+<!-- CODE MODAL -->
+<div class="mo" id="code-mo">
+  <div class="mo-box">
+    <div class="mo-title">🔑 كود الدخول</div>
+    <div class="code-display">
+      <div class="code-val" id="mo-code">MT-XXXX-XXXX</div>
+      <div class="code-sub" id="mo-client">اسم المحل</div>
+    </div>
+    <div class="mo-btns">
+      <button class="mo-btn mo-btn-wa" onclick="sendCodeWa()">💬 إرسال واتساب</button>
+      <button class="mo-btn mo-btn-g" onclick="copyCode()">📋 نسخ الكود</button>
+    </div>
+    <button class="mo-btn mo-btn-s" style="width:100%;margin-top:10px;" onclick="closeMo()">إغلاق</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, set, get, remove, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const app = initializeApp({
+  apiKey:"AIzaSyBQNVlq2JeKHNKN8DyAA74wXLYGTQdadaU",
+  authDomain:"attijara-9bf48.firebaseapp.com",
+  databaseURL:"https://attijara-9bf48-default-rtdb.firebaseio.com",
+  projectId:"attijara-9bf48",
+  storageBucket:"attijara-9bf48.appspot.com",
+  messagingSenderId:"562716281956",
+  appId:"1:562716281956:web:f5c6ec93cb90e2dbc4e371"
+});
+const db = getDatabase(app);
+
+window.fbSaveOrder = (order) => push(ref(db,'mahal_orders'), order);
+window.fbGetOrders = (cb) => get(ref(db,'mahal_orders')).then(s=>{
+  const data = s.val()||{};
+  cb(Object.entries(data).map(([id,v])=>({id,...v})));
+}).catch(()=>cb([]));
+window.fbUpdateOrder = (id, data) => set(ref(db,'mahal_orders/'+id), data);
+window.fbDeleteOrder = (id) => remove(ref(db,'mahal_orders/'+id));
+</script>
+
+<script>
+const PASS = 'mahal2024'; // غير كلمة السر
+const WA_NUM = '212691707125'; // غير رقمك
+const PACKS = {
+  basic: {label:'باسيك', price:'300', cls:'pack-basic'},
+  standard: {label:'ستاندار', price:'600', cls:'pack-standard'},
+  premium: {label:'بريميوم', price:'1000', cls:'pack-premium'}
+};
+
+let orders = [];
+let currentOrder = null;
+let currentCode = '';
+let currentTab = 'pending';
+
+// LOGIN
+function doLogin(){
+  const pass = document.getElementById('pass-inp').value;
+  if(pass === PASS){
+    document.getElementById('pg-login').style.display = 'none';
+    document.getElementById('pg-main').style.display = 'block';
+    loadOrders();
+  } else {
+    document.getElementById('login-err').textContent = '❌ كلمة السر غلط';
+    setTimeout(()=>document.getElementById('login-err').textContent='', 2000);
+  }
+}
+document.getElementById('pass-inp').addEventListener('keypress', e=>{ if(e.key==='Enter') doLogin(); });
+
+function doLogout(){
+  document.getElementById('pg-login').style.display = 'flex';
+  document.getElementById('pg-main').style.display = 'none';
+}
+
+// TABS
+function switchTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', ['pending','done','add'][i]===tab);
+  });
+  document.getElementById('tab-pending').style.display = tab==='pending'?'block':'none';
+  document.getElementById('tab-done').style.display = tab==='done'?'block':'none';
+  document.getElementById('tab-add').style.display = tab==='add'?'block':'none';
+}
+
+// LOAD ORDERS
+function loadOrders(){
+  if(!window.fbGetOrders) return setTimeout(loadOrders, 500);
+  window.fbGetOrders(data=>{
+    orders = data;
+    renderOrders();
+  });
+}
+
+function renderOrders(){
+  const pending = orders.filter(o=>o.status!=='done');
+  const done = orders.filter(o=>o.status==='done');
+
+  // Stats
+  document.getElementById('stat-total').textContent = orders.length;
+  document.getElementById('stat-pending').textContent = pending.length;
+  document.getElementById('stat-done').textContent = done.length;
+
+  // Pending
+  const pendingEl = document.getElementById('tab-pending');
+  if(!pending.length){
+    pendingEl.innerHTML = '<div class="empty">🎉 مكاين تا طلب في الانتظار</div>';
+  } else {
+    pendingEl.innerHTML = pending.map(o=>orderCard(o)).join('');
+  }
+
+  // Done
+  const doneEl = document.getElementById('tab-done');
+  if(!done.length){
+    doneEl.innerHTML = '<div class="empty">مكاين تا طلب مكتمل</div>';
+  } else {
+    doneEl.innerHTML = done.map(o=>orderCard(o)).join('');
+  }
+}
+
+function orderCard(o){
+  const pack = PACKS[o.pack]||PACKS.basic;
+  const date = o.date||'—';
+  return `
+    <div class="order-card ${o.status==='done'?'done':'pending'}">
+      <div class="order-top">
+        <div class="order-name">🏪 ${o.shop}</div>
+        <span class="order-pack ${pack.cls}">${pack.label} — ${pack.price}د</span>
+      </div>
+      <div class="order-info">
+        📞 <span>${o.wa||'—'}</span> &nbsp;|&nbsp;
+        📧 <span>${o.gmail||'—'}</span><br>
+        🛍️ <span>${o.type||'—'}</span> &nbsp;|&nbsp;
+        📅 <span>${date}</span>
+        ${o.notes?`<br>📝 <span>${o.notes}</span>`:''}
+        ${o.code?`<br>🔑 الكود: <span style="color:var(--g);font-weight:800;">${o.code}</span>`:''}
+      </div>
+      <div class="order-btns">
+        <button class="obtn obtn-wa" onclick="contactClient('${o.id}')">💬 تواصل</button>
+        <button class="obtn obtn-code" onclick="generateCode('${o.id}')">🔑 ${o.code?'إرسال الكود':'توليد كود'}</button>
+        <button class="obtn obtn-del" onclick="deleteOrder('${o.id}')">🗑</button>
+      </div>
+    </div>
+  `;
+}
+
+// ADD ORDER
+window.addOrder = function(){
+  const shop = document.getElementById('n-shop').value.trim();
+  const wa = document.getElementById('n-wa').value.trim();
+  const gmail = document.getElementById('n-gmail').value.trim();
+  const pack = document.getElementById('n-pack').value;
+  const type = document.getElementById('n-type').value.trim();
+  const notes = document.getElementById('n-notes').value.trim();
+
+  if(!shop||!wa||!gmail){ toast('⚠️ كمل المعلومات!','#e17055'); return; }
+
+  const order = {
+    shop, wa, gmail, pack, type, notes,
+    status:'pending',
+    date: new Date().toLocaleDateString('ar-MA')
+  };
+
+  if(window.fbSaveOrder){
+    window.fbSaveOrder(order).then(()=>{
+      toast('✅ تم حفظ الطلب!');
+      ['n-shop','n-wa','n-gmail','n-type','n-notes'].forEach(id=>document.getElementById(id).value='');
+      setTimeout(loadOrders, 500);
+      switchTab('pending');
+    });
+  }
+};
+
+// GENERATE CODE
+window.generateCode = function(id){
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  currentOrder = o;
+
+  if(o.code){
+    currentCode = o.code;
+  } else {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const part = (n) => Array.from({length:n},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+    currentCode = `MT-${part(4)}-${part(4)}`;
+  }
+
+  document.getElementById('mo-code').textContent = currentCode;
+  document.getElementById('mo-client').textContent = o.shop;
+  document.getElementById('code-mo').classList.add('show');
+};
+
+window.sendCodeWa = function(){
+  if(!currentOrder) return;
+  const pack = PACKS[currentOrder.pack]||PACKS.basic;
+  const msg = encodeURIComponent(
+`السلام عليكم ${currentOrder.shop} 👋
+موقعك على الإنترنت جاهز! 🎉
+
+🔑 كود الدخول ديالك:
+*${currentCode}*
+
+📦 الباقة: ${pack.label}
+📧 Gmail: ${currentOrder.gmail}
+
+ادخل بهاد الكود على موقعك ابدأ تدير محلك أونلاين! 🚀
+شكراً على ثقتك في محل تجارتك 🏪`
+  );
+  window.open(`https://wa.me/${currentOrder.wa.replace(/\D/g,'')}?text=${msg}`, '_blank');
+
+  // احفظ الكود وحدث الحالة
+  if(window.fbUpdateOrder){
+    const updated = {...currentOrder, code:currentCode, status:'done'};
+    window.fbUpdateOrder(currentOrder.id, updated).then(()=>{
+      setTimeout(loadOrders, 500);
+      toast('✅ تم إرسال الكود!');
+    });
+  }
+  closeMo();
+};
+
+window.copyCode = function(){
+  navigator.clipboard.writeText(currentCode).then(()=>toast('✅ تم نسخ الكود!'));
+};
+
+window.contactClient = function(id){
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  const msg = encodeURIComponent(`السلام عليكم ${o.shop} 👋\nبخصوص طلب موقعك...`);
+  window.open(`https://wa.me/${o.wa.replace(/\D/g,'')}?text=${msg}`, '_blank');
+};
+
+window.deleteOrder = function(id){
+  if(!confirm('حذف هاد الطلب؟')) return;
+  if(window.fbDeleteOrder){
+    window.fbDeleteOrder(id).then(()=>{
+      toast('✅ تم الحذف!');
+      setTimeout(loadOrders, 500);
+    });
+  }
+};
+
+function closeMo(){
+  document.getElementById('code-mo').classList.remove('show');
+  currentOrder = null;
+}
+
+function toast(msg, color){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color||'#00b894';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

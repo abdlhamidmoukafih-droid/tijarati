@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>محل تجارتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f8f9fa;
+  --white:#ffffff;
+  --dark:#1a1a2e;
+  --g:#00b894;
+  --gd:rgba(0,184,148,0.12);
+  --gold:#f9a825;
+  --goldd:rgba(249,168,37,0.15);
+  --b:#0984e3;
+  --r:#e17055;
+  --text:#2d3436;
+  --mut:#636e72;
+  --bdr:#e0e0e0;
+  --card:#ffffff;
+  --shadow:0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;}
+
+/* PAGES */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+  padding:40px 20px 60px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(0,184,148,0.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 50%,rgba(249,168,37,0.1) 0%,transparent 60%);
+}
+.hero-content{position:relative;z-index:1;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,184,148,0.2);border:1px solid rgba(0,184,148,0.4);
+  border-radius:20px;padding:5px 14px;
+  font-size:12px;color:#00b894;font-weight:700;
+  margin-bottom:20px;
+}
+.hero-title{font-size:36px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:10px;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:30px;line-height:1.7;}
+.hero-btns{display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto;}
+
+/* BUTTONS */
+.btn{
+  padding:13px 20px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;
+  transition:.2s;text-align:center;
+}
+.btn-g{background:var(--g);color:#fff;box-shadow:0 4px 15px rgba(0,184,148,0.3);}
+.btn-g:active{opacity:.85;}
+.btn-gold{background:var(--gold);color:#fff;box-shadow:0 4px 15px rgba(249,168,37,0.3);}
+.btn-out{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.3);}
+.btn-out:active{background:rgba(255,255,255,0.1);}
+.btn-full{width:100%;}
+
+/* STATS */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  background:var(--dark);
+}
+.stat{padding:16px;text-align:center;border-left:1px solid rgba(255,255,255,0.1);}
+.stat:last-child{border-left:none;}
+.stat-val{font-size:22px;font-weight:900;color:var(--gold);}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,0.6);}
+
+/* SECTION */
+.section{padding:30px 20px;}
+.sec-title{font-size:22px;font-weight:900;margin-bottom:6px;}
+.sec-sub{font-size:13px;color:var(--mut);margin-bottom:24px;line-height:1.6;}
+
+/* PACKS */
+.packs{display:flex;flex-direction:column;gap:16px;}
+.pack{
+  background:var(--card);border-radius:20px;padding:20px;
+  border:2px solid var(--bdr);
+  box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+  transition:.2s;
+}
+.pack:active{transform:scale(.98);}
+.pack.popular{border-color:var(--g);}
+.pack.premium{border-color:var(--gold);}
+.pack-badge{
+  position:absolute;top:14px;left:14px;
+  border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;
+}
+.pack-badge.g{background:var(--gd);color:var(--g);}
+.pack-badge.gold{background:var(--goldd);color:var(--gold);}
+.pack-icon{font-size:36px;margin-bottom:10px;}
+.pack-name{font-size:18px;font-weight:800;margin-bottom:4px;}
+.pack-price{font-size:32px;font-weight:900;margin-bottom:12px;}
+.pack-price small{font-size:14px;font-weight:400;color:var(--mut);}
+.pack-features{list-style:none;margin-bottom:16px;}
+.pack-features li{font-size:13px;padding:4px 0;display:flex;align-items:center;gap:8px;color:var(--mut);}
+.pack-features li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0;}
+
+/* SAMPLES */
+.samples{display:flex;flex-direction:column;gap:12px;}
+.sample{
+  background:var(--card);border-radius:14px;padding:16px;
+  border:1px solid var(--bdr);box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:14px;cursor:pointer;
+}
+.sample:active{background:var(--bg);}
+.sample-icon{font-size:32px;width:52px;height:52px;border-radius:12px;
+  background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sample-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+.sample-desc{font-size:12px;color:var(--mut);}
+.sample-arr{margin-right:auto;color:var(--mut);font-size:18px;}
+
+/* FORM */
+.form-card{
+  background:var(--card);border-radius:20px;padding:20px;
+  box-shadow:var(--shadow);margin-bottom:16px;
+}
+.form-title{font-size:16px;font-weight:800;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px;font-weight:600;}
+.fi{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1.5px solid var(--bdr);background:#fff;
+  color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;
+  text-align:right;outline:none;transition:.2s;
+}
+.fi:focus{border-color:var(--g);}
+select.fi{cursor:pointer;}
+.fi-row{display:flex;gap:8px;}
+.fi-row .fi{flex:1;}
+
+/* COLORS */
+.color-picker{display:flex;gap:8px;flex-wrap:wrap;}
+.color-opt{
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:.2s;
+}
+.color-opt.sel{border-color:var(--dark);}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--g);color:#fff;padding:10px 20px;
+  border-radius:20px;font-size:13px;font-weight:700;
+  opacity:0;transition:.25s;pointer-events:none;z-index:999;white-space:nowrap;
+}
+#toast.show{opacity:1;}
+
+/* MODAL */
+.mo{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  z-index:200;align-items:flex-end;justify-content:center;
+}
+.mo.show{display:flex;}
+.mo-box{
+  background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 40px;
+  width:100%;max-width:480px;
+}
+.mo-title{font-size:18px;font-weight:800;margin-bottom:16px;text-align:center;}
+
+/* SUCCESS */
+.success-card{
+  background:linear-gradient(135deg,#00b894,#00cec9);
+  border-radius:20px;padding:30px 20px;text-align:center;color:#fff;
+  margin:20px;box-shadow:0 8px 30px rgba(0,184,148,0.3);
+}
+.success-icon{font-size:64px;margin-bottom:16px;}
+.success-title{font-size:24px;font-weight:900;margin-bottom:8px;}
+.success-sub{font-size:14px;opacity:.9;line-height:1.6;margin-bottom:20px;}
+
+/* HEADER */
+.app-header{
+  background:#fff;border-bottom:1px solid var(--bdr);
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.header-logo{font-size:18px;font-weight:900;color:var(--dark);}
+.header-logo span{color:var(--g);}
+.back-btn{
+  width:36px;height:36px;border-radius:10px;border:1.5px solid var(--bdr);
+  background:#fff;color:var(--text);font-size:16px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+
+/* SELECTED PACK */
+.selected-pack-bar{
+  background:var(--dark);color:#fff;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;
+}
+.sp-name{font-weight:700;}
+.sp-price{color:var(--gold);font-weight:800;font-size:16px;}
+
+/* BOTTOM FIXED */
+.bottom-fixed{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#fff;border-top:1px solid var(--bdr);
+  padding:12px 16px 24px;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.1);
+}
+
+/* FEATURES GRID */
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.feat{
+  background:var(--card);border-radius:14px;padding:14px;
+  border:1px solid var(--bdr);box-shadow:var(--shadow);text-align:center;
+}
+.feat-icon{font-size:28px;margin-bottom:6px;}
+.feat-name{font-size:12px;font-weight:700;color:var(--dark);}
+.feat-desc{font-size:11px;color:var(--mut);margin-top:2px;}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--bdr);}
+.step:last-child{border-bottom:none;}
+.step-num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--g);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;flex-shrink:0;
+}
+.step-title{font-size:14px;font-weight:700;margin-bottom:3px;}
+.step-desc{font-size:12px;color:var(--mut);line-height:1.5;}
+</style>
+</head>
+<body>
+
+<!-- HOME PAGE -->
+<div id="pg-home" class="page active">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🏪 خدمة متميزة</div>
+      <div class="hero-title">محل <span>تجارتك</span><br>على الإنترنت!</div>
+      <div class="hero-sub">احصل على موقع ويب احترافي لمحلك<br>في أقل من 48 ساعة</div>
+      <div class="hero-btns">
+        <button class="btn btn-gold btn-full" onclick="showPage('pg-packs')">🚀 اطلب موقعك دابا</button>
+        <button class="btn btn-out btn-full" onclick="showPage('pg-samples')">👁 شوف أمثلة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">48h</div>
+      <div class="stat-lbl">وقت التسليم</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">3</div>
+      <div class="stat-lbl">باقات متاحة</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">100%</div>
+      <div class="stat-lbl">ضمان الجودة</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="section">
+    <div class="sec-title">🌟 لماذا تختارنا؟</div>
+    <div class="sec-sub">موقعك الاحترافي بأفضل الأسعار في المغرب</div>
+    <div class="features-grid">
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-name">تسليم سريع</div>
+        <div class="feat-desc">خلال 48 ساعة</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📱</div>
+        <div class="feat-name">متوافق الجوال</div>
+        <div class="feat-desc">يشتغل على كل جهاز</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💬</div>
+        <div class="feat-name">واتساب مدمج</div>
+        <div class="feat-desc">طلبات مباشرة</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎨</div>
+        <div class="feat-name">تصميم مخصص</div>
+        <div class="feat-desc">حسب طلبك</div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="sec-title">📋 كيفاش كيخدم؟</div>
+    <div class="sec-sub" style="margin-bottom:16px;">3 خطوات بسيطة وموقعك جاهز</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">اختار الباقة</div>
+          <div class="step-desc">اختار الباقة المناسبة لمحلك وملأ البيانات</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">ابعت الطلب</div>
+          <div class="step-desc">كنتواصلو معاك على واتساب لتأكيد الطلب والدفع</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">استلم موقعك</div>
+          <div class="step-desc">خلال 48 ساعة موقعك جاهز وكتدخل بـ Gmail ديالك</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:0 20px 100px;">
+    <button class="btn btn-g btn-full" onclick="showPage('pg-packs')">🛒 اطلب موقعك الآن</button>
+  </div>
+</div>
+
+<!-- PACKS PAGE -->
+<div id="pg-packs" class="page">
+  <div class="app-header">
+    <div class="header-logo">محل <span>تجارتك</span></div>
+    <div class="back-btn" onclick="showPage('pg-home')">←</div>
+  </div>
+  <div class="section" style="padding-bottom:100px;">
+    <div class="sec-title">💎 اختار الباقة</div>
+    <div class="sec-sub">3 باقات حسب حجم محلك وميزانيتك</div>
+    <div class="packs">
+
+      <!-- باسيك -->
+      <div class="pack" onclick="selectPack('basic')">
+        <div class="pack-icon">🥉</div>
+        <div class="pack-name">باسيك</div>
+        <div class="pack-price" style="color:var(--b);">300 <small>درهم</small></div>
+        <ul class="pack-features">
+          <li>قائمة منتجات مع أسعار</li>
+          <li>بيع بالتقسيط (حساب تلقائي)</li>
+          <li>واتساب للطلبات</li>
+          <li>صفحة واحدة بسيطة</li>
+          <li>متوافق مع الجوال</li>
+        </ul>
+        <button class="btn btn-full" style="background:rgba(9,132,227,0.1);color:var(--b);border:1.5px solid var(--b);">اختار هاد الباقة</button>
+      </div>
+
+      <!-- ستاندار -->
+      <div class="pack popular" onclick="selectPack('standard')">
+        <div class="pack-badge g">⭐ الأكثر طلباً</div>
+        <div class="pack-icon">🥈</div>
+        <div class="pack-name">ستاندار</div>
+        <div class="pack-price" style="color:var(--g);">600 <small>درهم</small></div>
+        <ul class="pack-features">
+          <li>كلشي ديال باسيك +</li>
+          <li>بيع بالتقسيط (حساب تلقائي)</li>
+          <li>بيع بالجملة مع الكميات الدنيا</li>
+          <li>صور احترافية للمنتجات</li>
+          <li>🎬 حتى 5 فيديوهات للمنتجات</li>
+          <li>لوغو + ألوان مخصصة</li>
+          <li>صفحة "من نحن"</li>
+          <li>خريطة الموقع</li>
+          <li>تصميم احترافي متكامل</li>
+        </ul>
+        <button class="btn btn-g btn-full">اختار هاد الباقة</button>
+      </div>
+
+      <!-- بريميوم -->
+      <div class="pack premium" onclick="selectPack('premium')">
+        <div class="pack-badge gold">🏆 تجار الجملة</div>
+        <div class="pack-icon">🥇</div>
+        <div class="pack-name">بريميوم</div>
+        <div class="pack-price" style="color:var(--gold);">1000 <small>درهم</small></div>
+        <ul class="pack-features">
+          <li>كلشي ديال ستاندار +</li>
+          <li>كتالوج جملة كامل</li>
+          <li>طلبات الجملة أونلاين</li>
+          <li>واتساب تلقائي للطلبات</li>
+          <li>منتجات غير محدودة</li>
+          <li>🎬 فيديوهات غير محدودة</li>
+          <li>تصميم احترافي جداً</li>
+        </ul>
+        <button class="btn btn-gold btn-full">اختار هاد الباقة</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FORM PAGE -->
+<div id="pg-form" class="page">
+  <div class="app-header">
+    <div class="header-logo">محل <span>تجارتك</span></div>
+    <div class="back-btn" onclick="showPage('pg-packs')">←</div>
+  </div>
+  <div class="selected-pack-bar">
+    <div class="sp-name" id="form-pack-name">الباقة المختارة</div>
+    <div class="sp-price" id="form-pack-price">300 درهم</div>
+  </div>
+
+  <div style="padding:16px;padding-bottom:120px;">
+    <!-- بيانات المحل -->
+    <div class="form-card">
+      <div class="form-title">🏪 بيانات المحل</div>
+      <div class="field">
+        <label>اسم المحل *</label>
+        <input class="fi" id="f-shop" type="text" placeholder="مثال: محل الفاروق للإلكترونيات"/>
+      </div>
+      <div class="field">
+        <label>نوع التجارة *</label>
+        <select class="fi" id="f-type">
+          <option value="">اختار...</option>
+          <option>إلكترونيات وهواتف</option>
+          <option>ملابس وأحذية</option>
+          <option>مواد غذائية</option>
+          <option>أثاث ومنزل</option>
+          <option>مستحضرات التجميل</option>
+          <option>أدوات ومعدات</option>
+          <option>صيدلية وصحة</option>
+          <option>مطعم وكافيه</option>
+          <option>أخرى</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>وصف قصير للمحل</label>
+        <textarea class="fi" id="f-desc" rows="3" placeholder="مثال: نبيعو أحدث الهواتف والإلكترونيات بأحسن الأسعار في المغرب..."></textarea>
+      </div>
+    </div>
+
+    <!-- بيانات التواصل -->
+    <div class="form-card">
+      <div class="form-title">📞 بيانات التواصل</div>
+      <div class="field">
+        <label>رقم واتساب *</label>
+        <input class="fi" id="f-wa" type="tel" placeholder="212XXXXXXXXX"/>
+      </div>
+      <div class="field">
+        <label>Gmail للدخول للموقع *</label>
+        <input class="fi" id="f-gmail" type="email" placeholder="exemple@gmail.com"/>
+      </div>
+      <div class="field">
+        <label>العنوان / المدينة</label>
+        <input class="fi" id="f-city" type="text" placeholder="مثال: الدار البيضاء — درب السلطان"/>
+      </div>
+    </div>
+
+    <!-- المنتجات -->
+    <div class="form-card">
+      <div class="form-title">📦 المنتجات الرئيسية</div>
+      <div class="field">
+        <label>اكتب أهم منتجاتك (مفصولة بفاصلة)</label>
+        <textarea class="fi" id="f-products" rows="3" placeholder="مثال: iPhone 15, Samsung Galaxy, شاشات, سماعات, شواحن..."></textarea>
+      </div>
+    </div>
+
+    <!-- صور المنتجات -->
+    <div class="form-card">
+      <div class="form-title">📸 صور المنتجات</div>
+      <div class="field">
+        <label>أرفع صور منتجاتك (اختياري — يمكن إرسالها لاحقاً على واتساب)</label>
+        <div id="imgs-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;"></div>
+        <label style="
+          display:flex;align-items:center;justify-content:center;gap:8px;
+          padding:14px;border:2px dashed var(--bdr);border-radius:12px;
+          cursor:pointer;color:var(--mut);font-size:13px;font-weight:600;
+          background:var(--bg);transition:.2s;
+        " onmouseover="this.style.borderColor='#00b894'" onmouseout="this.style.borderColor='var(--bdr)'">
+          📷 اضغط لرفع الصور
+          <input type="file" accept="image/*" multiple onchange="handleImgs(event)" style="display:none;"/>
+        </label>
+        <div style="font-size:11px;color:var(--mut);margin-top:6px;text-align:center;">كتقدر ترفع حتى 10 صور — PNG, JPG</div>
+      </div>
+    </div>
+
+    <!-- فيديوهات المنتجات -->
+    <div class="form-card" id="videos-section" style="display:none;">
+      <div class="form-title">🎬 فيديوهات المنتجات</div>
+      <div class="field">
+        <label id="video-limit-label">أرفع فيديوهات منتجاتك</label>
+        <div id="vids-preview" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;"></div>
+        <label id="vid-upload-btn" style="
+          display:flex;align-items:center;justify-content:center;gap:8px;
+          padding:14px;border:2px dashed var(--bdr);border-radius:12px;
+          cursor:pointer;color:var(--mut);font-size:13px;font-weight:600;
+          background:var(--bg);transition:.2s;
+        " onmouseover="this.style.borderColor='#0984e3'" onmouseout="this.style.borderColor='var(--bdr)'">
+          🎬 اضغط لرفع الفيديوهات
+          <input type="file" accept="video/*" multiple onchange="handleVids(event)" style="display:none;"/>
+        </label>
+        <div style="font-size:11px;color:var(--mut);margin-top:6px;text-align:center;" id="vid-limit-txt"></div>
+      </div>
+    </div>
+
+    <!-- الألوان (ستاندار وبريميوم فقط) -->
+    <div class="form-card" id="colors-section">
+      <div class="form-title">🎨 اختار ألوان موقعك</div>
+      <div class="color-picker" id="color-picker">
+        <div class="color-opt sel" style="background:#00b894;" onclick="selColor(this,'#00b894')"></div>
+        <div class="color-opt" style="background:#0984e3;" onclick="selColor(this,'#0984e3')"></div>
+        <div class="color-opt" style="background:#6c5ce7;" onclick="selColor(this,'#6c5ce7')"></div>
+        <div class="color-opt" style="background:#e17055;" onclick="selColor(this,'#e17055')"></div>
+        <div class="color-opt" style="background:#f9a825;" onclick="selColor(this,'#f9a825')"></div>
+        <div class="color-opt" style="background:#2d3436;" onclick="selColor(this,'#2d3436')"></div>
+        <div class="color-opt" style="background:#d63031;" onclick="selColor(this,'#d63031')"></div>
+        <div class="color-opt" style="background:#00cec9;" onclick="selColor(this,'#00cec9')"></div>
+      </div>
+    </div>
+
+    <!-- ملاحظات -->
+    <div class="form-card">
+      <div class="form-title">📝 ملاحظات إضافية</div>
+      <div class="field">
+        <textarea class="fi" id="f-notes" rows="3" placeholder="أي طلبات خاصة أو معلومات إضافية..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom fixed -->
+  <div class="bottom-fixed">
+    <button class="btn btn-g btn-full" onclick="submitOrder()">💬 أرسل الطلب عبر واتساب</button>
+  </div>
+</div>
+
+<!-- SAMPLES PAGE -->
+<div id="pg-samples" class="page">
+  <div class="app-header">
+    <div class="header-logo">محل <span>تجارتك</span></div>
+    <div class="back-btn" onclick="showPage('pg-home')">←</div>
+  </div>
+  <div class="section" style="padding-bottom:100px;">
+    <div class="sec-title">👁 أمثلة مواقعنا</div>
+    <div class="sec-sub">شوف كيفاش كيكونو مواقعنا</div>
+    <div class="samples">
+      <div class="sample" onclick="toast('قريباً! 🚀')">
+        <div class="sample-icon">📱</div>
+        <div>
+          <div class="sample-name">محل الهواتف والإلكترونيات</div>
+          <div class="sample-desc">باقة ستاندار — تصميم احترافي</div>
+        </div>
+        <div class="sample-arr">←</div>
+      </div>
+      <div class="sample" onclick="toast('قريباً! 🚀')">
+        <div class="sample-icon">👗</div>
+        <div>
+          <div class="sample-name">محل الملابس والأزياء</div>
+          <div class="sample-desc">باقة بريميوم — تصميم فاخر</div>
+        </div>
+        <div class="sample-arr">←</div>
+      </div>
+      <div class="sample" onclick="toast('قريباً! 🚀')">
+        <div class="sample-icon">🍕</div>
+        <div>
+          <div class="sample-name">مطعم وكافيه</div>
+          <div class="sample-desc">باقة ستاندار — قائمة طعام</div>
+        </div>
+        <div class="sample-arr">←</div>
+      </div>
+      <div class="sample" onclick="toast('قريباً! 🚀')">
+        <div class="sample-icon">💊</div>
+        <div>
+          <div class="sample-name">صيدلية</div>
+          <div class="sample-desc">باقة باسيك — بسيط ونظيف</div>
+        </div>
+        <div class="sample-arr">←</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;">
+      <button class="btn btn-g btn-full" onclick="showPage('pg-packs')">🛒 اطلب موقعك الآن</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="pg-success" class="page">
+  <div style="padding-top:40px;">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">تم إرسال طلبك!</div>
+      <div class="success-sub">غادي نتواصلو معاك خلال 24 ساعة على واتساب لتأكيد الطلب والدفع — موقعك غادي يكون جاهز خلال 48 ساعة بعد الدفع!</div>
+      <button class="btn btn-full" style="background:rgba(255,255,255,0.2);color:#fff;border:2px solid rgba(255,255,255,0.4);" onclick="showPage('pg-home')">← الرجوع للرئيسية</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+let selectedPackData = {name:'باسيك', price:'300', key:'basic'};
+let selectedColor = '#00b894';
+const WA_NUM = '212691707125'; // غير هاد الرقم
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toast(msg, color){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color||'#00b894';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function selectPack(key){
+  const packs = {
+    basic: {name:'باسيك', price:'300', key:'basic', maxVids:0},
+    standard: {name:'ستاندار', price:'600', key:'standard', maxVids:5},
+    premium: {name:'بريميوم', price:'1000', key:'premium', maxVids:999}
+  };
+  selectedPackData = packs[key];
+  document.getElementById('form-pack-name').textContent = '📦 ' + selectedPackData.name;
+  document.getElementById('form-pack-price').textContent = selectedPackData.price + ' درهم';
+
+  // الألوان — باسيك ما عندوش
+  document.getElementById('colors-section').style.display = key === 'basic' ? 'none' : 'block';
+
+  // الفيديوهات — باسيك ما عندوش
+  const vidsSection = document.getElementById('videos-section');
+  if(key === 'basic'){
+    vidsSection.style.display = 'none';
+  } else {
+    vidsSection.style.display = 'block';
+    const limit = key === 'standard' ? 5 : '∞';
+    document.getElementById('video-limit-label').textContent = `أرفع فيديوهات منتجاتك (حتى ${limit} فيديو)`;
+    document.getElementById('vid-limit-txt').textContent = key === 'standard' ? 'حتى 5 فيديوهات — MP4, MOV' : 'فيديوهات غير محدودة — MP4, MOV';
+  }
+
+  // reset videos
+  uploadedVids = [];
+  document.getElementById('vids-preview').innerHTML = '';
+
+  showPage('pg-form');
+}
+
+let uploadedVids = [];
+
+function handleVids(e){
+  const maxVids = selectedPackData.maxVids;
+  const files = Array.from(e.target.files);
+  const remaining = maxVids === 999 ? files.length : maxVids - uploadedVids.length;
+
+  if(remaining <= 0){
+    toast(`⚠️ وصلتي للحد الأقصى (${maxVids} فيديوهات)!`, '#e17055');
+    return;
+  }
+
+  files.slice(0, remaining).forEach(file => {
+    uploadedVids.push(file.name);
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px;border:1px solid var(--bdr);';
+    div.innerHTML = `
+      <span style="font-size:24px;">🎬</span>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">${file.name}</div>
+        <div style="font-size:11px;color:var(--mut);">${(file.size/1024/1024).toFixed(1)} MB</div>
+      </div>
+      <div onclick="this.parentElement.remove();uploadedVids.splice(${uploadedVids.length-1},1);" 
+           style="width:24px;height:24px;border-radius:50%;background:#e17055;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</div>
+    `;
+    document.getElementById('vids-preview').appendChild(div);
+  });
+
+  if(maxVids !== 999 && uploadedVids.length >= maxVids){
+    toast(`✅ وصلتي للحد الأقصى (${maxVids} فيديوهات)`);
+  }
+}
+
+function selColor(el, color){
+  document.querySelectorAll('.color-opt').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedColor = color;
+}
+
+let uploadedImgs = [];
+
+function handleImgs(e){
+  const files = Array.from(e.target.files).slice(0, 10);
+  const preview = document.getElementById('imgs-preview');
+  
+  files.forEach(file => {
+    if(uploadedImgs.length >= 10) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      uploadedImgs.push({name: file.name, data: ev.target.result});
+      const div = document.createElement('div');
+      div.style.cssText = 'position:relative;';
+      div.innerHTML = `
+        <img src="${ev.target.result}" style="width:70px;height:70px;border-radius:10px;object-fit:cover;border:2px solid var(--bdr);"/>
+        <div onclick="removeImg(${uploadedImgs.length-1},this.parentElement)" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#e17055;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</div>
+      `;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeImg(i, el){
+  uploadedImgs.splice(i, 1);
+  el.remove();
+}
+
+function submitOrder(){
+  const shop = document.getElementById('f-shop').value.trim();
+  const type = document.getElementById('f-type').value;
+  const desc = document.getElementById('f-desc').value.trim();
+  const wa = document.getElementById('f-wa').value.trim();
+  const gmail = document.getElementById('f-gmail').value.trim();
+  const city = document.getElementById('f-city').value.trim();
+  const products = document.getElementById('f-products').value.trim();
+  const notes = document.getElementById('f-notes').value.trim();
+
+  if(!shop){ toast('⚠️ دخل اسم المحل!','#e17055'); return; }
+  if(!wa){ toast('⚠️ دخل رقم واتساب!','#e17055'); return; }
+  if(!gmail){ toast('⚠️ دخل Gmail ديالك!','#e17055'); return; }
+
+  const imgsText = uploadedImgs.length > 0 ? `\n📸 الصور: ${uploadedImgs.length} صورة (غادي نبعتهم)` : '\n📸 الصور: غادي نبعتهم على واتساب';
+  const vidsText = uploadedVids.length > 0 ? `\n🎬 الفيديوهات: ${uploadedVids.length} فيديو (غادي نبعتهم)` : '';
+
+  const colorText = selectedPackData.key !== 'basic' ? `\n🎨 اللون المختار: ${selectedColor}` : '';
+
+  const msg = encodeURIComponent(
+`السلام عليكم 👋
+طلب موقع ويب جديد:
+
+📦 الباقة: ${selectedPackData.name} — ${selectedPackData.price} درهم
+🏪 اسم المحل: ${shop}
+🛍️ نوع التجارة: ${type}
+📍 المدينة: ${city||'—'}
+📞 واتساب: ${wa}
+📧 Gmail: ${gmail}
+${colorText}${imgsText}${vidsText}
+📦 المنتجات الرئيسية:
+${products||'—'}
+📝 ملاحظات: ${notes||'—'}`
+  );
+
+  window.open(`https://wa.me/${WA_NUM}?text=${msg}`, '_blank');
+  showPage('pg-success');
+}
+</script>
+</body>
+</html>
